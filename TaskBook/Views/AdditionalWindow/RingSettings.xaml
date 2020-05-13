@@ -1,0 +1,27 @@
+﻿<Window x:Class="TaskBook.Views.AdditionalWindow.RingSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TaskBook.Views.AdditionalWindow"
+        xmlns:userControls="clr-namespace:TaskBook.UserControls"
+        mc:Ignorable="d"
+        Title="Настройка звуков" Height="450" Width="400" Name="RingSet">
+    <Grid>
+        <StackPanel>
+            <userControls:RingSetting RingName="Новое напоминание" RingFileName="{Binding ElementName=RingSet, Path=RingOne, Mode=TwoWay}" 
+                                     IsRingDefault="{Binding ElementName=RingSet, Path=IsRingOneDefault, Mode=TwoWay}"/>
+            <userControls:RingSetting RingName="Повтор напоминания" RingFileName="{Binding ElementName=RingSet, Path=RingTwo, Mode=TwoWay}"
+                                      IsRingDefault="{Binding ElementName=RingSet, Path=IsRingTwoDefault, Mode=TwoWay}"/>
+            <userControls:RingSetting RingName="День Рождения" RingFileName="{Binding ElementName=RingSet, Path=RingTree, Mode=TwoWay}"
+                                      IsRingDefault="{Binding ElementName=RingSet, Path=IsRingTreeDefault, Mode=TwoWay}"/>
+
+            <Grid>
+                <Button Margin="0,50,250,0" HorizontalAlignment="Center" VerticalAlignment="Center" IsDefault="True" Click="Save_OnClick">Сохранить</Button>
+                <Button Margin="250,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" IsCancel="True" Click="Exit_OnClick">Отмена</Button>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>
+
+    

@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="TaskBook.Views.TrashView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TaskBook.Views"
+             xmlns:TaskBook.ViewModels="clr-namespace:TaskBook.ViewModels"
+             xmlns:taskBook="clr-namespace:TaskBook"
+             xmlns:data="clr-namespace:TaskBook.Data"
+             xmlns:tools="clr-namespace:TaskBook.Tools"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.DataContext>
+        <TaskBook.ViewModels:TrashViewModel  />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <tools:StrikethroughConverter x:Key="Converter"/>
+        <tools:ColorConverter x:Key="ColorConverter"/>
+        <tools:SizeConverter x:Key="SizeConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ListView ItemsSource="{Binding TrashTasks}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <Border x:Name="Border1" Margin="5"  BorderThickness="3"  BorderBrush="{Binding ImportantId, Converter={StaticResource ColorConverter} }">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.Resources>
+                <DataTemplate DataType="{x:Type data:Task}">
+                    <StackPanel  Orientation="Horizontal" >
+                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.ReturnCommand}" ToolTip="Вернуть задачу"
+                                    CommandParameter="{Binding .}" Padding="0" Width="20" Height="20" Margin="10,0,0,0">
+
+                        </Button>
+
+                        <TextBlock TextAlignment="Center" Text="{Binding TaskTime, StringFormat={}{0:HH:mm}}" Margin="10,0,0,0"
+                                       TextDecorations="{Binding IsChecked, Converter={StaticResource Converter}, ElementName=CheckBox}"/>
+                        <TextBlock TextAlignment="Right" Width="{Binding DateWidth}" Text="{Binding DateView}" Margin="10,0,0,0" 
+                                       TextDecorations="{Binding IsChecked, Converter={StaticResource Converter}, ElementName=CheckBox}"/>
+
+                        <TextBlock Text="{Binding TaskInfo}"  TextWrapping="Wrap" Margin="10,0,0,0" MaxHeight="80"  
+                                   TextDecorations="{Binding IsChecked, Converter={StaticResource Converter}, ElementName=CheckBox}" VerticalAlignment="Center"  ToolTip="{Binding TaskInfo}">
+                            <TextBlock.Width>
+                                <MultiBinding Converter="{StaticResource SizeConverter}">
+                                    <Binding Path="ActualWidth" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Grid}}" />
+                                    <Binding Path="DateWidth" />
+                                </MultiBinding>
+                            </TextBlock.Width>
+                        </TextBlock>
+
+                        <TextBlock Width="85" TextAlignment="Left" Text="{Binding DayView}" Margin="10,0,0,0" IsEnabled="False"
+                                       TextDecorations="{Binding IsChecked, Converter={StaticResource Converter}, ElementName=CheckBox}">
+                        </TextBlock>
+
+                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.DelCommand}" ToolTip="Удалить задачу"
+                                    CommandParameter="{Binding .}" Padding="0" Width="20" Height="20" Margin="10,0,0,0">
+                            <ContentControl Template="{StaticResource TrashIcon}" Width="18" Height="18"/>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.Resources>
+        </ListView>
+        <StackPanel Grid.Row="1" Margin="0,10,30,0" Orientation="Horizontal" HorizontalAlignment="Right" >
+            <Label VerticalAlignment="Bottom" Margin="0,0,5,0">Поиск:</Label>
+            <TextBox  VerticalAlignment="Bottom" Text="{Binding SearchLine, UpdateSourceTrigger=PropertyChanged}" Width="175"
+                      ToolTip="Поиск"></TextBox>
+        </StackPanel>
+    </Grid>
+</UserControl>

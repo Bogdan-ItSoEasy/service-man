@@ -1,0 +1,162 @@
+﻿<UserControl x:Class="TaskBook.Views.PresentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+
+             xmlns:data="clr-namespace:TaskBook.Data"
+             xmlns:tools="clr-namespace:TaskBook.Tools"
+             xmlns:viewModels="clr-namespace:TaskBook.ViewModels"
+             mc:Ignorable="d"
+             
+             d:DesignHeight="500" d:DesignWidth="500">
+    <UserControl.DataContext>
+        <viewModels:PresentViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <tools:StrikethroughConverter x:Key="Converter"/>
+        <tools:ColorConverter x:Key="ColorConverter"/>
+        <tools:SizeConverter x:Key="SizeConverter"/>
+
+        <Style x:Key="FontStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.FontSetter.FontSize}"></Setter>
+            <Setter Property="FontFamily" Value="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.FontSetter.FontFamily}"></Setter>
+        </Style>
+        <Style x:Key="FontStyleWithWidth" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.FontSetter.FontSize}"></Setter>
+            <Setter Property="FontFamily" Value="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.FontSetter.FontFamily}"></Setter>
+            <Setter Property="Width" Value="{Binding DateWidth}"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsThatDay}" Value="True">
+                    <Setter Property="Width" Value="0"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+
+        <ListBox Name="TasksList" Margin="0,0,0,10" Grid.Row="1" ItemsSource="{Binding ViewTasks}" >
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <Border x:Name="Border1" Margin="5"  BorderThickness="3"  BorderBrush="{Binding ImportantId, Converter={StaticResource ColorConverter}}">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.Resources>
+                <DataTemplate DataType="{x:Type data:Task}">
+                    <StackPanel  Orientation="Horizontal" MouseDown="StackPanel_MouseDown" >
+                        <CheckBox x:Name="CheckBox" IsChecked="{Binding IsDone, UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0,0"  ToolTip="Завершить задачу" 
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.DoneCommand}" CommandParameter="{Binding .}">
+                        </CheckBox>
+
+                        <TextBlock TextAlignment="Center" Text="{Binding TaskTime, StringFormat={}{0:HH:mm}}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                   TextDecorations="{Binding IsChecked, Converter={StaticResource Converter}, ElementName=CheckBox}"
+                                   Style="{StaticResource FontStyle}"/>
+
+                        <TextBlock TextAlignment="Right" Text="{Binding DateView}" Margin="10,0,0,0" VerticalAlignment="Center"
+                               TextDecorations="{Binding IsChecked, Converter={StaticResource Converter}, ElementName=CheckBox}"
+                               Style="{StaticResource FontStyle}" Width="{Binding DateWidth}"/>
+
+                        <TextBlock Text="{Binding TaskInfo}"  TextWrapping="Wrap" Margin="10,0,0,0" MaxHeight="80"  
+                                   TextDecorations="{Binding IsChecked, Converter={StaticResource Converter}, ElementName=CheckBox}" 
+                                   VerticalAlignment="Center"  ToolTip="{Binding TaskInfo}"
+                                   Style="{StaticResource FontStyle}">
+                            <TextBlock.Width>
+                                <MultiBinding Converter="{StaticResource SizeConverter}">
+                                    <Binding Path="ActualWidth" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Grid}}" />
+                                    <Binding Path="DateWidth" />
+                                </MultiBinding>
+                            </TextBlock.Width>
+                        </TextBlock>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Width="{Binding DayWidth}" TextAlignment="Left" Text="{Binding DayView}" Margin="10,0,0,0" IsEnabled="False"
+                                       TextDecorations="{Binding IsChecked, Converter={StaticResource Converter}, ElementName=CheckBox}"
+                                       Style="{StaticResource FontStyle}">
+                            </TextBlock>
+                            <TextBlock Text="{Binding RepeateView}" TextAlignment="Left"  Margin="10,0,0,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RepeaterId}" Value="0">
+                                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding RepeateView}" Value="">
+                                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding RepeateView}" Value="0">
+                                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                        
+                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.DelCommand}"  ToolTip="Перенести в корзину"
+                                    CommandParameter="{Binding .}" Padding="0" Width="20" Height="20" Margin="10,0,0,0">
+                                <ContentControl Template="{StaticResource TrashIcon}" Width="18" Height="18"/>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type data:SeparatorTask}">
+                    <Grid>
+                        <Rectangle Fill="#DBD3B8" Height="30"></Rectangle>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding TaskInfo}"  HorizontalAlignment="Center" Margin="0,2,0,0" FontSize="18" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.Resources>
+        </ListBox>
+
+        
+        <Button HorizontalAlignment="Left" Padding="0"  Height="30" Width="30" Grid.Row="2" Click="Add_Click" Margin="20,0,0,0" ToolTip="Добавление задачи">
+            <ContentControl Template="{StaticResource CrestIcon}" Width="25" Height="25"/>
+        </Button>
+        <Button HorizontalAlignment="Left" Padding="0"  Height="30" Width="30" Grid.Row="2" Click="DoneView_Click" Margin="60,10,0,10" ToolTip="Выполненные задачи">
+            <Image Width="26" Height="26" Source="..\Resources\list.png"/>
+        </Button>
+        <Button HorizontalAlignment="Left" Padding="0"  Height="30" Width="30" Grid.Row="2" Click="TrashView_Click" Margin="100,10,0,10" ToolTip="Удаленные задачи">
+            <Image HorizontalAlignment="Center" Width="45" Height="30" Source="..\Resources\trash.png"/>
+        </Button>
+
+        <Button HorizontalAlignment="Left"  Padding="0"  Height="30" Width="30" Grid.Row="2"  Click="DoneListView_Click" Margin="140,10,0,10"  ToolTip="Список выполненных задач">
+            <Image Width="28" Height="30" Source="..\Resources\guestbook_128px.png"/>
+        </Button>
+
+        <Button HorizontalAlignment="Left" Padding="0"  Height="30" Width="30" Grid.Row="2" Click="SettingView_Click" Margin="180,10,0,10" ToolTip="Настройки">
+            <ContentControl Template="{StaticResource GearIcon}" Width="26" Height="26"/>
+        </Button>
+
+        <StackPanel Grid.Row="2" Margin="0,0,30,0" Orientation="Horizontal" HorizontalAlignment="Right" >
+            <Label VerticalAlignment="Bottom" Margin="0,0,5,0">Поиск:</Label>
+            <TextBox  VerticalAlignment="Bottom" Text="{Binding SearchLine, UpdateSourceTrigger=PropertyChanged}" Width="175"
+                     ToolTip="Поиск"></TextBox>
+        </StackPanel>
+       
+
+        <ComboBox HorizontalAlignment="Right"  VerticalAlignment="Top"  SelectedIndex="{Binding ViewIndex}" Grid.Row="2" Height="20" Width="125" Margin="0,0,30,0" ItemsSource="{Binding ViewList}" ToolTip="Фильтр задач"/>
+
+        <Button HorizontalAlignment="Right" Width="20" Height="20" VerticalAlignment="Top" Margin="0,0,160,0"  Grid.Row="2"  Command="{Binding GetNextCommand}"  VerticalContentAlignment="Center" Padding="0" ToolTip="Следующий фильтр">
+            <Image Width="15" Height="15" Source="..\Resources\right.png" VerticalAlignment="Center"/>
+        </Button>
+        <Button HorizontalAlignment="Right" Width="20" Height="20" VerticalAlignment="Top" Margin="0,0,185,0"  Grid.Row="2" Command="{Binding GetPrevCommand}"  VerticalContentAlignment="Center"  Padding="0" ToolTip="Предыдущий фильтр">
+            <Image Width="15" Height="15" Source="..\Resources\left.png" VerticalAlignment="Center" Margin="0,2,0,0"/>
+        </Button>
+    </Grid>
+</UserControl>

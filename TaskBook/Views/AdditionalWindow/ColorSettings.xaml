@@ -1,0 +1,27 @@
+﻿<Window x:Class="TaskBook.Views.AdditionalWindow.ColorSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TaskBook.Views.AdditionalWindow"
+        xmlns:userControls="clr-namespace:TaskBook.UserControls"
+        mc:Ignorable="d"
+        Title="Настройки цвета" Height="400" Width="600" ResizeMode="NoResize" Name="ColorSetter">
+    <Grid>
+        <StackPanel>
+            <userControls:ColorSetting SelectedColor="{Binding ElementName=ColorSetter, Path=BaseColor, Mode=TwoWay}" ColorName="Обычная задача" Height="50"/>
+            <userControls:ColorSetting SelectedColor="{Binding ElementName=ColorSetter, Path=NormalColor, Mode=TwoWay}" ColorName="Важная задача" Height="50"/>
+            <userControls:ColorSetting SelectedColor="{Binding ElementName=ColorSetter, Path=ImportantColor, Mode=TwoWay}" ColorName="Очень важная задача" Height="50"/>
+            <userControls:ColorSetting SelectedColor="{Binding ElementName=ColorSetter, Path=VeryImportantColor, Mode=TwoWay}" ColorName="Особо важная задача" Height="50"/>
+            <userControls:ColorSetting SelectedColor="{Binding ElementName=ColorSetter, Path=BirthDayColor, Mode=TwoWay}" ColorName="День Рождения" Height="50"/>
+
+
+            <Button Margin="0,10,225,0" HorizontalAlignment="Center" VerticalAlignment="Center" IsDefault="True" Click="ToDefault_OnClick">По умолчанию</Button>
+            <Grid>
+                <Button Margin="0,30,250,0" HorizontalAlignment="Center" VerticalAlignment="Center" IsDefault="True" Click="Save_OnClick">Сохранить</Button>
+                <Button Margin="250,30,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" IsCancel="True" Click="Exit_OnClick">Отмена</Button>
+            </Grid>
+        </StackPanel>
+        
+    </Grid>
+</Window>

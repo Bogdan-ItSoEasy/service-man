@@ -1,0 +1,36 @@
+﻿<dx:DXWindow x:Class="TaskBook.AddTemplateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TaskBook"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        mc:Ignorable="d" 
+        Title="Добавить шаблон" Height="370" Width="400" Name="AddTemplate" MinHeight="370" MaxWidth="450" MinWidth="450" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <Label Margin="0,0,0,0" >Название шаблона:</Label>
+            <TextBox HorizontalAlignment="Left" Margin="0,10,0,0" Name="KeyBox"
+                     Width="300" />
+            <Label Margin="0,10,0,0" >Шаблон:</Label>
+            
+        </StackPanel>
+        <TextBox  Grid.Row="1" TextWrapping="Wrap" Margin="0,10" Name="TemplateBox"
+                  AcceptsReturn="True" MinHeight="165" 
+                 VerticalContentAlignment="Top" />
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsDefault="True" Click="Add_click">Добавить</Button>
+            <Button Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsCancel="True">Отмена</Button>
+        </Grid>
+    </Grid>
+</dx:DXWindow>
+

@@ -1,0 +1,15 @@
+﻿<dx:DXWindow xmlns:viewModels="clr-namespace:TaskBook.ViewModels" 
+    x:Class="TaskBook.RemindWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:views="clr-namespace:TaskBook.Views"
+    Title="Напоминания" Height="350" Width="525" MinHeight="300" MinWidth="610" 
+             WindowStyle="None"
+             Topmost="True"
+             ShowInTaskbar="False"
+    Padding="0">
+    <Grid>
+        <views:RemindViewCostil></views:RemindViewCostil>
+    </Grid>
+</dx:DXWindow>

@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="TaskBook.UserControls.Clock.Clock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TaskBook.UserControls.Clock"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid MouseDown="Grid_MouseDown">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="4*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" ></RowDefinition>
+            <RowDefinition Height="1*" ></RowDefinition>
+            <RowDefinition Height="1*" ></RowDefinition>
+            <RowDefinition Height="4*" ></RowDefinition>
+            <RowDefinition Height="1*" ></RowDefinition>
+            <RowDefinition Height="1*" ></RowDefinition>
+            <RowDefinition Height="1*" ></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Image Source="../../Resources/Clock41.gif" Grid.ColumnSpan="7" Grid.RowSpan="7"></Image>
+
+        <Grid Name="GridMin" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" Grid.RowSpan="5">
+            <Ellipse />
+            <local:ClockPoint></local:ClockPoint>
+            <local:ClockPoint  Angle="0" Hour="0" ></local:ClockPoint>
+            <local:ClockPoint  Angle="30" Hour="5"></local:ClockPoint>
+            <local:ClockPoint  Angle="60" Hour="10"></local:ClockPoint>
+            <local:ClockPoint  Angle="90" Hour="15"></local:ClockPoint>
+            <local:ClockPoint  Angle="120" Hour="20"></local:ClockPoint>
+            <local:ClockPoint  Angle="150" Hour="25"></local:ClockPoint>
+            <local:ClockPoint  Angle="180" Hour="30"></local:ClockPoint>
+            <local:ClockPoint  Angle="210" Hour="35"></local:ClockPoint>
+            <local:ClockPoint  Angle="240" Hour="40"></local:ClockPoint>
+            <local:ClockPoint  Angle="270" Hour="45"></local:ClockPoint>
+            <local:ClockPoint  Angle="300" Hour="50"></local:ClockPoint>
+            <local:ClockPoint  Angle="330" Hour="55"></local:ClockPoint>
+        </Grid>
+        <Grid Name="Grid" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="3" Grid.RowSpan="3">
+            <Ellipse Stroke="CornflowerBlue" StrokeThickness="2" />
+            <local:ClockPoint  Angle="0" Hour="12" FontSize="13"/>
+            <local:ClockPoint  Angle="30" Hour="1" FontSize="13"/>
+            <local:ClockPoint  Angle="60" Hour="2" FontSize="13"/>
+            <local:ClockPoint  Angle="90" Hour="3" FontSize="13"/>
+            <local:ClockPoint  Angle="120" Hour="4" FontSize="13"/>
+            <local:ClockPoint  Angle="150" Hour="5" FontSize="13"/>
+            <local:ClockPoint  Angle="180" Hour="6" FontSize="13"/>
+            <local:ClockPoint  Angle="210" Hour="7" FontSize="13"/>
+            <local:ClockPoint  Angle="240" Hour="8" FontSize="13"/>
+            <local:ClockPoint  Angle="270" Hour="9" FontSize="13"/>
+            <local:ClockPoint  Angle="300" Hour="10" FontSize="13"/>
+            <local:ClockPoint  Angle="330" Hour="11" FontSize="13"/>
+        </Grid>
+
+        <Grid Name="GridLow" Grid.Column="3" Grid.Row="3">
+            <Ellipse />
+            
+            <local:ClockPoint  Angle="30" Hour="13" FontSize="11"></local:ClockPoint>
+            <local:ClockPoint  Angle="60" Hour="14" FontSize="11"></local:ClockPoint>
+            <local:ClockPoint  Angle="90" Hour="15" FontSize="11"></local:ClockPoint>
+            <local:ClockPoint  Angle="120" Hour="16" FontSize="11"></local:ClockPoint>
+            <local:ClockPoint  Angle="150" Hour="17" FontSize="11"></local:ClockPoint>
+            <local:ClockPoint  Angle="180" Hour="18" FontSize="11"></local:ClockPoint>
+            <local:ClockPoint  Angle="210" Hour="19" FontSize="11"></local:ClockPoint>
+            <local:ClockPoint  Angle="240" Hour="20" FontSize="11"></local:ClockPoint>
+            <local:ClockPoint  Angle="270" Hour="21" FontSize="11"></local:ClockPoint>
+            <local:ClockPoint  Angle="300" Hour="22" FontSize="11"></local:ClockPoint>
+            <local:ClockPoint  Angle="330" Hour="23" FontSize="11"></local:ClockPoint>
+            <local:ClockPoint  Angle="0" Hour="24" FontSize="11"></local:ClockPoint>
+        </Grid>
+
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,101 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+             xmlns:clock1="clr-namespace:TaskBook.UserControls.Clock"
+             xmlns:viewModels="clr-namespace:TaskBook.ViewModels"
+             xmlns:userControls="clr-namespace:TaskBook.UserControls"
+
+
+             x:Class="TaskBook.Views.AddComCtrlView"
+
+             mc:Ignorable="d"
+             
+             d:DesignHeight="600" d:DesignWidth="500">
+    <UserControl.DataContext>
+        <viewModels:AddComCtrlViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <Style x:Key="FontStyle" TargetType="TextBox">
+                        <Setter Property="FontSize" Value="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, 
+                Path=DataContext.FontSetter.FontSize}"/>
+                         <Setter Property="FontFamily" Value="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, 
+                Path=DataContext.FontSetter.FontFamily}"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <clock1:Clock Width="200" Height="200" HorizontalAlignment="Left" Hour="{Binding Hour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Min="{Binding Min, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   HoursLenght="20" Margin="5,0,0,0"/>
+
+        
+        <clock1:TimeControl x:Name="Time"  HorizontalAlignment="Center" Grid.Row="1"  Grid.Column="0" Margin="0,10,0,0"
+                           Width="100" HourControl="{Binding Hour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          MinControl="{Binding Min, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Rectangle Grid.Row="1" Grid.Column="1" Stroke="LightGray" Height="30" Width="110" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataDate, StringFormat=\{0:dd.MM.yyyy\}}" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Margin="0,10,0,0"/>
+
+        <telerik:RadCalendar Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Right" Width="200" SelectedDate="{Binding DataDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AreWeekNumbersVisible="False"  Height="200" VerticalAlignment="Center" Margin="0,0,5,0"/>
+
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Label Content="Повторения:" Margin="5"/>
+                <ComboBox ItemsSource="{Binding Repeaters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding WhenRepeate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" Width="120" Margin="5,5,5,5"/>
+            </StackPanel>
+
+            <userControls:DayOfWeekBox Grid.Row="1" WeekDaysContent="{Binding RemindedWeekDays, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <userControls:DayOfWeekBox.Style>
+                    <Style TargetType="userControls:DayOfWeekBox">
+                        <Setter Property="IsEnabled" Value="False"></Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RepeateId}" Value="6">
+                                <Setter Property="IsEnabled" Value="True"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </userControls:DayOfWeekBox.Style>
+            </userControls:DayOfWeekBox>
+
+        </Grid>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0" >
+            <Label Content="Важность:" Margin="5"/>
+            <ComboBox ItemsSource="{Binding Importants, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top"
+                      SelectedItem="{Binding WhatImportant, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" Width="120" Margin="5,5,5,5"/>
+        </StackPanel>
+
+        <TextBox TextWrapping="Wrap" AcceptsReturn="True"  Grid.Row="4" Margin="5"   Text="{Binding Data}" Grid.ColumnSpan="2"  
+                 Grid.Column="0" VerticalContentAlignment="Top" SpellCheck.IsEnabled="true" Style="{StaticResource FontStyle}"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
+            <ComboBox Margin="10,10,5,10" HorizontalAlignment="Left" ItemsSource="{Binding TemplateList}" Width="200"
+                      SelectedItem="{Binding SelectedKey, UpdateSourceTrigger=PropertyChanged}">
+            </ComboBox>
+            <Button Margin="5,10" Command="{Binding AddTemplateCommand}" Padding="0" Width="25" Height="25">
+                <ContentControl Template="{StaticResource CrestIcon}" Width="20" Height="20"/>
+            </Button>
+        </StackPanel>
+
+        <Button Command="{Binding AddCommand}" x:Name="Button" Grid.Row="5" Margin="10"  HorizontalAlignment="Right" Grid.ColumnSpan="2"
+                Grid.Column="0" />
+    </Grid>
+</UserControl>

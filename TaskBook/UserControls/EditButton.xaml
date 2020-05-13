@@ -1,0 +1,27 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    x:Class="TaskBook.UserControls.EditButton"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        
+        <Button Name="Button"  Grid.RowSpan="2" Width="60"></Button>
+        <Button Grid.Row="0" Grid.Column="1" Width="20" Click="Up_But_Click" Padding="0">
+            <Image Width="13" Height="13" Source="../Resources/up.png" VerticalAlignment="Center"/>
+        </Button>
+        <Button Grid.Column="1"  Width="20"  Grid.Row="1"  Click="Down_But_Click" Padding="0">
+            <Image Width="13" Height="13" Margin="1,0,0,0" Source="../Resources/down.png" VerticalAlignment="Center"/>
+        </Button>
+    </Grid>
+</UserControl>
