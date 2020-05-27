@@ -48,7 +48,7 @@
 
         <StackPanel Grid.Row="4" Margin="5,10,10,20">
             <Label Content="Комментарий:"></Label>
-            <TextBox Height="50" Text="{Binding Comment}"></TextBox>
+            <TextBox Height="50" Text="{Binding Comment}" TextWrapping="Wrap" AcceptsReturn="True"></TextBox>
         </StackPanel>
 
         <Button Grid.Row="5" HorizontalAlignment="Center" Name="Button" VerticalAlignment="Center" Command="{Binding AddCommand}" ></Button>

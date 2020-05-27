@@ -88,9 +88,9 @@
                                        TextDecorations="{Binding IsChecked, Converter={StaticResource Converter}, ElementName=CheckBox}"
                                        Style="{StaticResource FontStyle}">
                             </TextBlock>
-                            <TextBlock Text="{Binding RepeateView}" TextAlignment="Left"  Margin="10,0,0,0">
+                            <TextBlock Text="{Binding RepeateView}" TextAlignment="Left"  Margin="10,0,0,0" Width="{Binding DayWidth}"  HorizontalAlignment="Left" TextWrapping="WrapWithOverflow">
                                 <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource FontStyle}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding RepeaterId}" Value="0">
                                                 <Setter Property="Visibility" Value="Collapsed"></Setter>
