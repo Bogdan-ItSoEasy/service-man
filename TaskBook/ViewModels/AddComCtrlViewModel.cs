@@ -210,6 +210,13 @@ namespace TaskBook.ViewModels
                 return;
             }
 
+            if (RepeateId == 6 && RemindedWeekDays == 0)
+            {
+                MessageBox.Show("Укажите дни недели для напоминаний");
+                return;
+            }
+
+
             if(_editingTask == null)
             {
                 Task task = new CommonTask();
