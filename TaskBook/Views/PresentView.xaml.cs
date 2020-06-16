@@ -18,7 +18,7 @@ namespace TaskBook.Views
         public PresentView()
         {
             InitializeComponent();
-            }
+        }
 
         private void SettingView_Click(object sender, RoutedEventArgs e)
         {
@@ -29,22 +29,22 @@ namespace TaskBook.Views
 
         private void TrashView_Click(object sender, RoutedEventArgs e)
         {
-            if (tw == null)
+            if (_tw == null)
             {
-                tw = new DXWindow() { Content = new TrashView(), Title = "Удаленные задачи", MinHeight = 400, MinWidth = 430 };
-                tw.Closing += (s, en) =>
+                _tw = new DXWindow() { Content = new TrashView(), Title = "Удаленные задачи", MinHeight = 400, MinWidth = 430 };
+                _tw.Closing += (s, en) =>
                 {
-                    Properties.Settings.Default.TrashWindowPosition = tw.RestoreBounds;
+                    Properties.Settings.Default.TrashWindowPosition = _tw.RestoreBounds;
                     Properties.Settings.Default.Save();
-                    tw = null;
+                    _tw = null;
                 };
-                RestoreWindow(Properties.Settings.Default.TrashWindowPosition, tw,500,500);
-                tw.Show();
+                RestoreWindow(Properties.Settings.Default.TrashWindowPosition, _tw,500,500);
+                _tw.Show();
             }
             else
             {
                 MessageBox.Show("Данное окно уже открыто!");
-                tw?.Activate();
+                _tw?.Activate();
             }
         }
         private void DoneListView_Click(object sender, RoutedEventArgs e)
@@ -148,7 +148,9 @@ namespace TaskBook.Views
                             EditingTask = task,
                             Hour = task.TaskTime.Hour,
                             Min = task.TaskTime.Minute,
-                            RemindedWeekDays = task.RemindedWeekDays
+                            RemindedWeekDays = task.RemindedWeekDays,
+                            RemindedWeekNumbers = task.RemindedWeekNumber,
+                            IsWeekCheck = task.RemindedWeekNumber != default,
                         };
 
                         aw = new DXWindow() { Content = new AddComCtrlView() { ButtonContent = "Изменение", DataContext = context }, Title = "Изменение", MinHeight = 600, MaxWidth = 500, MinWidth = 500 };
@@ -192,40 +194,45 @@ namespace TaskBook.Views
 
                 if(bounds.Equals(new Rect(0,0,0,0)) || useStd)
                 {
-                    window.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-                    window.Height = (stdHeight != 0) ? stdHeight : window.Height;
-                    window.Width = (stdWidth != 0) ? stdWidth : window.Width;
+                    if (window != null)
+                    {
+                        window.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+                        window.Height = (stdHeight != 0) ? stdHeight : window.Height;
+                        window.Width = (stdWidth != 0) ? stdWidth : window.Width;
+                    }
 
                     return;
                 }
 
-                window.Top = bounds.Top;
-                window.Left = bounds.Left;
-
-                if (window.SizeToContent == SizeToContent.Manual)
+                if (window != null)
                 {
-                    window.Width = bounds.Width;
-                    window.Height = bounds.Height;
+                    window.Top = bounds.Top;
+                    window.Left = bounds.Left;
+
+                    if (window.SizeToContent == SizeToContent.Manual)
+                    {
+                        window.Width = bounds.Width;
+                        window.Height = bounds.Height;
+                    }
                 }
             }
             catch
-            { 
-                window.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-                window.Height = (stdHeight != 0) ? stdHeight : window.Height;
-                window.Width = (stdWidth != 0) ? stdWidth : window.Width;
+            {
+                if (window != null)
+                {
+                    window.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+                    window.Height = (stdHeight != 0) ? stdHeight : window.Height;
+                    window.Width = (stdWidth != 0) ? stdWidth : window.Width;
+                }
             }
 
         }
 
         Window aw;
         Window dw;
-        Window tw;
-        Window sw;
+        private Window _tw;
         Window dlw;
 
-        private void CheckBox_OnClick(object sender, RoutedEventArgs e)
-        {
-            
-        }
+
     }
 }

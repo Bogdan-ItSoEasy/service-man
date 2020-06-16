@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,12 +33,6 @@ namespace TaskBook.Tools
         public static FontName AddWindowFondName { get; } = new FontName("add_window_font", 12);
 
         public static FontName MainWindowFontName { get; } = new FontName("main_window_font", 12);
-
-        
-        public static List<FontName> Settingable = new List<FontName>
-        {
-            RemindWindowFontName, AddWindowFondName, MainWindowFontName
-        };
     }
     
 
@@ -46,12 +40,12 @@ namespace TaskBook.Tools
     {
         public static void SetFontSize(FontName fontName, int value)
         {
-            if(!SettingProvider.GetSetting(fontName.SizeName).Equals(value.ToString()))
-                SettingProvider.SetSetting(fontName.SizeName, value.ToString());
+            if(!SettingProvider.GetSetting(fontName.SizeName).Equals(value.ToString(new CultureInfo("ru-Ru")), StringComparison.Ordinal))
+                SettingProvider.SetSetting(fontName.SizeName, value.ToString(new CultureInfo("ru-Ru")));
         }
         public static void SetFontFamily(FontName fontName, string family)
         {
-            if (!SettingProvider.GetSetting(fontName.FamilyName).Equals(family))
+            if (!SettingProvider.GetSetting(fontName.FamilyName).Equals(family, StringComparison.Ordinal))
                 SettingProvider.SetSetting(fontName.FamilyName, family);
         }
 
@@ -60,7 +54,7 @@ namespace TaskBook.Tools
             try
             {
                 var appSettings = ConfigurationManager.AppSettings;
-                return appSettings[fontName.SizeName] != null ? Int32.Parse(appSettings[fontName.SizeName]) : fontName.StandartSize;
+                return appSettings[fontName.SizeName] != null ? Int32.Parse(appSettings[fontName.SizeName], new CultureInfo("ru-Ru")) : fontName.StandartSize;
             }
             catch (FormatException)
             {

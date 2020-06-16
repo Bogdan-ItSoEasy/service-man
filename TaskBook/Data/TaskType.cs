@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace TaskBook.Data
@@ -24,7 +25,7 @@ namespace TaskBook.Data
         {
             get
             {
-                return string.Format("{0} {1} {2}\nИсполняется {3} {4}{5}", Surname, Name, Farthername, TaskDate.Year - RemindDate.Year, GetYearName(TaskDate.Year - RemindDate.Year), 
+                return string.Format(new CultureInfo("ru-Ru"), "{0} {1} {2}\nИсполняется {3} {4}{5}", Surname, Name, Farthername, TaskDate.Year - RemindDate.Year, GetYearName(TaskDate.Year - RemindDate.Year), 
                 Comment == default? Comment:"\n"+Comment);
             }
             set

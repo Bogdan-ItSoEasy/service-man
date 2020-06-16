@@ -23,7 +23,6 @@ namespace TaskBook.Views
         public SettingView()
         {
             InitializeComponent();
-            //SetEnable(CheckBox.IsChecked, Box, Button);
             SetEnable(CheckBox1.IsChecked, Box1, Button1);      
             
 

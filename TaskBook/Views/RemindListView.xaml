@@ -63,7 +63,7 @@
                 Click="ActiveMainWindow_OnClick" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0" Padding="0">
             <Image Source="..\Resources\181.png"></Image>
         </Button>
-        <telerik:RadTabControl Name="Tab" Grid.Row="1" ItemsSource="{Binding TC.CostRemindedCollection}" 
+        <telerik:RadTabControl Name="Tab" Grid.Row="1" ItemsSource="{Binding TC.RemindedCollection}" 
                     SelectedItem="{Binding SelectedTask, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                     SelectedIndex="{Binding SelectedIndex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" AllowDragReorder="True" SelectionChanged="Tab_OnSelectionChanged">
             <telerik:RadTabControl.Template>

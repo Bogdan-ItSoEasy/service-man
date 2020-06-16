@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 using TaskBook.UserControls.Clock;
@@ -7,11 +8,11 @@ using TaskBook.UserControls.Clock;
 namespace TaskBook.UserControls.Clock
 {
     /// <summary>
-    /// Логика взаимодействия для Clock.xaml
+    /// Логика взаимодействия для ClockControl.xaml
     /// </summary>
-    public partial class Clock : INotifyPropertyChanged
+    public partial class ClockControl : INotifyPropertyChanged
     {
-        public Clock()
+        public ClockControl()
         {
             InitializeComponent();
 
@@ -32,12 +33,12 @@ namespace TaskBook.UserControls.Clock
             }
         }
 
-        public static readonly DependencyProperty MinProperty = DependencyProperty.Register("Min", typeof(int), typeof(Clock), new PropertyMetadata(0, 
+        public static readonly DependencyProperty MinProperty = DependencyProperty.Register("Min", typeof(int), typeof(ClockControl), new PropertyMetadata(0, 
             PropertyChangedCallback));
 
         private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            if(!(dependencyObject is Clock clock))
+            if(!(dependencyObject is ClockControl clock))
                 return;
 
             var value = (int)dependencyPropertyChangedEventArgs.NewValue;
@@ -46,7 +47,7 @@ namespace TaskBook.UserControls.Clock
             {
                 if (chil is ClockPoint curMin && curMin.Label?.Content != null)
                 {
-                    if(Int32.Parse(curMin.Label.Content.ToString()) == value - value % 5) 
+                    if(Int32.Parse(curMin.Label.Content.ToString(), new CultureInfo("ru-Ru")) == value - value % 5) 
                         curMin.Back.Fill = Brushes.Orange;
                     else
                     
@@ -70,12 +71,12 @@ namespace TaskBook.UserControls.Clock
             }
         }
 
-        public static readonly DependencyProperty HourProperty = DependencyProperty.Register("Hour", typeof(int), typeof(Clock), new PropertyMetadata(0,
+        public static readonly DependencyProperty HourProperty = DependencyProperty.Register("Hour", typeof(int), typeof(ClockControl), new PropertyMetadata(0,
             HourPropertyChangedCallback));
 
         private static void HourPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            if (!(dependencyObject is Clock clock))
+            if (!(dependencyObject is ClockControl clock))
                 return;
 
             var value = (int)dependencyPropertyChangedEventArgs.NewValue;
@@ -84,7 +85,7 @@ namespace TaskBook.UserControls.Clock
             {
                 if (chil is ClockPoint curMin && curMin.Label?.Content != null)
                 {
-                    if (Int32.Parse(curMin.Label.Content.ToString()) == value)
+                    if (Int32.Parse(curMin.Label.Content.ToString(), new CultureInfo("ru-Ru")) == value)
                         curMin.Back.Fill = Brushes.Aqua;
                     else
 
@@ -96,7 +97,7 @@ namespace TaskBook.UserControls.Clock
             {
                 if (chil is ClockPoint curMin && curMin.Label?.Content != null)
                 {
-                    var hour = Int32.Parse(curMin.Label.Content.ToString());
+                    var hour = Int32.Parse(curMin.Label.Content.ToString(), new CultureInfo("ru-Ru"));
                     if (hour == value || value == 0 && hour == 24)
                         curMin.Back.Fill = Brushes.Aqua;
                     else
@@ -111,25 +112,26 @@ namespace TaskBook.UserControls.Clock
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(v));
         }
 
-        public double HoursLenght
+        public double HoursLength
         {
+            get => Grid.Children.Count != 0 ? (Grid.Children[0] as ClockPoint)?.Length ?? 0 : 0;
             set
             {
-                foreach (var chil in Grid.Children)
+                foreach (var children in Grid.Children)
                 {
-                    if (chil is ClockPoint hour)
+                    if (children is ClockPoint hour)
                         hour.Length = value;
                 }
 
-                foreach (var chil in GridLow.Children)
+                foreach (var children in GridLow.Children)
                 {
-                    if (chil is ClockPoint hour)
+                    if (children is ClockPoint hour)
                         hour.Length = value;
                 }
 
-                foreach (var chil in GridMin.Children)
+                foreach (var children in GridMin.Children)
                 {
-                    if (chil is ClockPoint hour)
+                    if (children is ClockPoint hour)
                         hour.Length = value;
                 }
             }
@@ -139,21 +141,21 @@ namespace TaskBook.UserControls.Clock
 
         private void ClockFace_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            foreach (var chil in Grid.Children)
+            foreach (var children in Grid.Children)
             {
-                if (chil is ClockPoint hour)
+                if (children is ClockPoint hour)
                     hour.Radius = Grid.ActualHeight / (2 * hour.Grid.ActualHeight);
             }
 
-            foreach (var chil in GridLow.Children)
+            foreach (var children in GridLow.Children)
             {
-                if (chil is ClockPoint hour)
+                if (children is ClockPoint hour)
                     hour.Radius = GridLow.ActualHeight / (2 * hour.Grid.ActualHeight);
             }
 
-            foreach (var chil in GridMin.Children)
+            foreach (var children in GridMin.Children)
             {
-                if (chil is ClockPoint hour)
+                if (children is ClockPoint hour)
                     hour.Radius = GridMin.ActualHeight / (2 * hour.Grid.ActualHeight);
             }
 
@@ -171,7 +173,7 @@ namespace TaskBook.UserControls.Clock
                             curMin.Back.Fill = null;
                     }
                     hour.Back.Fill = Brushes.Orange;
-                    Min = Int32.Parse(hour.Label.Content.ToString());
+                    Min = Int32.Parse(hour.Label.Content.ToString(), new CultureInfo("ru-Ru"));
                 }
                 else
                 {
@@ -184,7 +186,7 @@ namespace TaskBook.UserControls.Clock
                            curHour.Back.Fill = null;
 
                     hour.Back.Fill = Brushes.Aqua;
-                    var newValue = Int32.Parse(hour.Label.Content.ToString());
+                    var newValue = Int32.Parse(hour.Label.Content.ToString(), new CultureInfo("ru-Ru"));
                     Hour = newValue != 24? newValue: 0;
                 }
             }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using ViewModelBase = TaskBook.ViewModels.ViewModelBase;
 
 namespace TaskBook.Data
 {
@@ -12,8 +11,8 @@ namespace TaskBook.Data
         {
             AllTasks = new ObservableCollection<Task>();
             Saver = new Serializer();
-            RemindedCollection = new ObservableCollection<Task>();
-            CostRemindedCollection = new ObservableCollection<RemindedTask>();
+
+            RemindedCollection = new ObservableCollection<RemindedTask>();
             
             LoadTask();
             UpdateTime();
@@ -35,12 +34,12 @@ namespace TaskBook.Data
 
         public void SetMissedRemindedCollection()
         {
-            SetRemindedCollection(GetMissedRemider());
+            SetRemindedCollection(GetMissedReminder());
         }
 
         public bool IsNewRemindTask(Task task)
         {
-            foreach (var cost in CostRemindedCollection)
+            foreach (var cost in RemindedCollection)
                 if (cost.Task.Equals(task))
                     return false;
 
@@ -49,12 +48,14 @@ namespace TaskBook.Data
 
         public void SetRemindedCollection(List<Task> list)
         {
-            foreach (var task in list)
-                if(IsNewRemindTask(task))
-                    CostRemindedCollection.Insert(0, new RemindedTask(task));
+            if (list != null)
+                foreach (var task in list)
+                    if (IsNewRemindTask(task))
+                        RemindedCollection.Insert(0, new RemindedTask(task));
         }
 
         private static TaskControl _tc;
+
         public static TaskControl GetInstance()
         {
             return _tc ?? (_tc = new TaskControl());
@@ -86,14 +87,13 @@ namespace TaskBook.Data
             return true;
         }
 
+        public ObservableCollection<Task> AllTasks { get; }
 
-        public ObservableCollection<Task> AllTasks { get; set; }
-
-        private ISaver Saver { get; set; }
+        private ISaver Saver { get; }
 
         public Task GetTaskById(string id)
         {
-            foreach (var task in _tc.AllTasks)
+            foreach (var task in AllTasks)
             {
                 if (task.Id == id) return task;
             }
@@ -111,10 +111,10 @@ namespace TaskBook.Data
             if (!Task.CheckTask(newTask))
                 return false;
 
-            if (newTask.RemindDate == DateTime.MinValue)
+            if (newTask != null && newTask.RemindDate == DateTime.MinValue)
                 newTask.RemindDate = newTask is BirthTask task? task.BirthDay: newTask.TaskDate;
 
-            if (newTask.RemindTime == DateTime.MinValue)
+            if (newTask != null && newTask.RemindTime == DateTime.MinValue)
                 newTask.RemindTime = newTask.TaskTime;
 
             AllTasks.Add(newTask);
@@ -122,12 +122,7 @@ namespace TaskBook.Data
             return true;
         }
 
-        public void DelTask(Task task)
-        {
-            AllTasks.Remove(task);
-        }
-
-        public List<Task> GetRemider()
+        public List<Task> GetReminder()
         {
             UpdateTime();
 
@@ -141,7 +136,7 @@ namespace TaskBook.Data
             return result;
         }
 
-        public List<Task> GetMissedRemider()
+        public List<Task> GetMissedReminder()
         {
             List<Task> res = new List<Task>();
 
@@ -156,19 +151,6 @@ namespace TaskBook.Data
             return res;
         }
 
-        public void Clear()
-        {
-            for (int i = 0; i < AllTasks.Count; ++i)
-            {
-                if (AllTasks[i].IsTrash)
-                {
-                    AllTasks.RemoveAt(i);
-                    --i;
-                }
-            }
-
-        }
-
         public void UpdateTime()
         {
             foreach (var task in AllTasks)
@@ -178,17 +160,15 @@ namespace TaskBook.Data
             OnCollectionUpdate();
         }
 
-        public ObservableCollection<Task> RemindedCollection { get; set; }
-
-        public ObservableCollection<RemindedTask> CostRemindedCollection { get; set; }
+        public ObservableCollection<RemindedTask> RemindedCollection { get; }
 
         public void DelCostTaskById(string id)
         {
-            foreach(RemindedTask coTask in CostRemindedCollection)
+            foreach(RemindedTask coTask in RemindedCollection)
             {
                 if (id == coTask.Task.Id)
                 {
-                    CostRemindedCollection.Remove(coTask);
+                    RemindedCollection.Remove(coTask);
                     
                     return;
                 }
@@ -199,10 +179,10 @@ namespace TaskBook.Data
         {
             foreach (var task in AllTasks)
             {
-                if(!(task is BirthTask btask))
+                if(!(task is BirthTask bTask))
                     continue;
 
-                if (btask.TaskDate.Date == birthTask.TaskDate.Date && btask.Surname == birthTask.Surname && btask.Name == birthTask.Name && btask.Farthername == birthTask.Farthername)
+                if (bTask.TaskDate.Date == birthTask.TaskDate.Date && bTask.Surname == birthTask.Surname && bTask.Name == birthTask.Name && bTask.Farthername == birthTask.Farthername)
                     return false;
             }
 
@@ -213,22 +193,22 @@ namespace TaskBook.Data
         {
             foreach (var curTask in AllTasks)
             {
-                if (!(curTask is CommonTask ctask))
+                if (!(curTask is CommonTask cTask))
                     continue;
 
-                if (ctask.TaskDate.Date == task.TaskDate.Date && ctask.TaskInfo == task.TaskInfo && ctask.TaskTime == task.TaskTime)
+                if (task != null && (cTask.TaskDate.Date == task.TaskDate.Date && cTask.TaskInfo == task.TaskInfo && cTask.TaskTime == task.TaskTime))
                     return false;
             }
 
             return true;
         }
 
-        public void AddToHistoryList(Task task)
+        public static void AddToHistoryList(Task task)
         {
-            HistoryListProvider.AddToHistoryList(task);
+            if (task != null) HistoryListProvider.AddToHistoryList(task);
         }
 
-        public List<HistoryTask> GetHistoryList()
+        public static List<HistoryTask> GetHistoryList()
         {
             return HistoryListProvider.GetHistoryList();
         }

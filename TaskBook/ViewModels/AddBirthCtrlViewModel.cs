@@ -150,7 +150,7 @@ namespace TaskBook.ViewModels
             set
             {
                 _surname = value;
-                OnPropertyChanged("Surname");
+                OnPropertyChanged();
             }
         }
 
@@ -162,7 +162,7 @@ namespace TaskBook.ViewModels
             set
             {
                 _name = value;
-                OnPropertyChanged("Name");
+                OnPropertyChanged();
             }
         }
 
@@ -174,7 +174,7 @@ namespace TaskBook.ViewModels
             set
             {
                 _farthername = value;
-                OnPropertyChanged("Farthername");
+                OnPropertyChanged();
             }
         }
 
@@ -192,7 +192,7 @@ namespace TaskBook.ViewModels
             set
             {
                 _comment = value;
-                OnPropertyChanged("Comment");
+                OnPropertyChanged();
             }
         }
         private string _comment;

@@ -26,30 +26,12 @@ namespace TaskBook.ViewModels
 
         private void OnChangeUc()
         {
-            if (ChangeUcEvent != null) ChangeUcEvent.Invoke(this, new ComonEventArgs() { Args = CurrentTaskListIndex});
+            ChangeUcEvent?.Invoke(this, new CommonEventArgs() { Args = CurrentTaskListIndex});
         }
 
         public ICommand ChangeUc { get; set; }
 
-        public List<string> TaskList
-        {
-            get
-            {
-                return _taskList;
-            }
-            set
-            {
-                _taskList = value;
-                OnPropertyChanged("TaskList");
-            }
-        }
-
-        internal void SetEditingTask(object task)
-        {
-            EditingTask = task as Task;
-        }
-
-        List<string> _taskList;
+        public List<string> TaskList { get;}
 
         public int CurrentTaskListIndex
         {
@@ -69,17 +51,14 @@ namespace TaskBook.ViewModels
         int _currentTaskList;
 
 
-        public event EventHandler<ComonEventArgs> ChangeUcEvent;
+        public event EventHandler<CommonEventArgs> ChangeUcEvent;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string v)
         {
             
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(v));
-            }
+            handler?.Invoke(this, new PropertyChangedEventArgs(v));
         }
     }
 }

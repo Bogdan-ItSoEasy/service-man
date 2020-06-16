@@ -35,12 +35,12 @@ namespace TaskBook.Tools
 
         public static void SetAutoRun(string autorun, string value)
         {
-            var oldValue = ConfigurationManager.AppSettings["autorun"];
+            var oldValue = ConfigurationManager.AppSettings[autorun];
 
 
             if (oldValue == null || value != oldValue)
             {
-                SetSetting("autorun", value);
+                SetSetting(autorun, value);
                 UpdateAutorun();
             }
         }

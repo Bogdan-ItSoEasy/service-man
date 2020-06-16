@@ -19,8 +19,11 @@ namespace TaskBook.Tools
             _fontName = fontName;
             if(isUpdateSetting)
                 SettingProvider.SettingsUpdate += SettingProvider_SettingsUpdate;
-            FontSize = FontController.GetFontSize(_fontName, false);
-            FontFamily = FontController.GetFontFamily(_fontName, false);
+            if (_fontName != null)
+            {
+                FontSize = FontController.GetFontSize(_fontName, false);
+                FontFamily = FontController.GetFontFamily(_fontName, false);
+            }
         }
         private void SettingProvider_SettingsUpdate(object sender, EventArgs e)
         {

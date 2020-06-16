@@ -36,9 +36,9 @@ namespace TaskBook.Views.AdditionalWindow
             RingTwo = appSettings["ring2"] != null && !IsRingTwoDefault? appSettings["ring2"] : "";
             RingTree = appSettings["ring3"] != null && !IsRingTreeDefault ? appSettings["ring3"] : "";
 
-            IsRingOneDefault = RingOne == "";
-            IsRingTwoDefault = RingTwo == "";
-            IsRingTreeDefault = RingTree == "";
+            IsRingOneDefault = string.IsNullOrEmpty(RingOne);
+            IsRingTwoDefault = string.IsNullOrEmpty(RingTwo);
+            IsRingTreeDefault = string.IsNullOrEmpty(RingTree);
         }
 
 

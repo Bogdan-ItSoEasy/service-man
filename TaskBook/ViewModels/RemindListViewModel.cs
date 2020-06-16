@@ -9,6 +9,7 @@ using System.Windows;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Threading;
 using TaskBook.Data;
@@ -41,8 +42,7 @@ namespace TaskBook.ViewModels
 
 
             MoveToTrashCommand = new RelayCommand<string>(OnMoveToTrashCommand);
-            SelectedTask = TC.CostRemindedCollection.FirstOrDefault();
-            // TC.CostRemindedCollection.CollectionChanged += CostRemindedCollectionOnCollectionChanged;
+            SelectedTask = TC.RemindedCollection.FirstOrDefault();
             FontSize = FontController.GetFontSize(FontName.RemindWindowFontName);
             SettingProvider.SettingsUpdate += SettingProviderOnSettingsUpdate;
         }
@@ -52,8 +52,8 @@ namespace TaskBook.ViewModels
             try
             {
                 var appSettings = ConfigurationManager.AppSettings;
-                if (appSettings["remind_window_font"] != null && Int32.Parse(appSettings["remind_window_font"]) != FontSize)
-                    FontSize = Int32.Parse(appSettings["remind_window_font"]);
+                if (appSettings["remind_window_font"] != null && Int32.Parse(appSettings["remind_window_font"], new CultureInfo("ru-Ru")) != FontSize)
+                    FontSize = Int32.Parse(appSettings["remind_window_font"], new CultureInfo("ru-RU"));
             }
             catch (FormatException)
             {
@@ -67,12 +67,10 @@ namespace TaskBook.ViewModels
             if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Add &&
                 notifyCollectionChangedEventArgs.NewItems.Count != 0)
             {
-                Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => SelectedTask = TC.CostRemindedCollection.First()));
+                Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => SelectedTask = TC.RemindedCollection.First()));
             }
                 
         }
-
-        public bool ChangeFocus = false;
 
         private void OnToOtherGridCommand(RemindedTask obj)
         {
@@ -228,7 +226,7 @@ namespace TaskBook.ViewModels
         {
             var task = TC.GetTaskById(id);
             task.IsDone = true;
-            TC.AddToHistoryList(task);
+            TaskControl.AddToHistoryList(task);
             UpdateTask(task);
             OnDelCommand(id);
             TC.SaveCurrentTask();

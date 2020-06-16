@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -87,8 +88,6 @@ namespace TaskBook.Tools
                 Microsoft.Office.Interop.Excel.Application appExcel = new Microsoft.Office.Interop.Excel.Application();
 
                 var workbook = appExcel.Workbooks.Open(fileName);
-                var importCount = 0;
-                int count = 0;
                 foreach (Worksheet worksheet in workbook.Sheets)
                     for (int i = 1; i <= worksheet.UsedRange.Rows.Count; ++i)
                     {
@@ -96,14 +95,15 @@ namespace TaskBook.Tools
                                 worksheet.Cells[i, "C"].Text,
                                 worksheet.Cells[i, "D"].Text, worksheet.Cells[i, "E"].Text, worksheet.Cells[i, "F"].Text,
                                 worksheet.Cells[i, "G"].Text, worksheet.Cells[i, "J"].Text, worksheet.Cells[i, "K"].Text))
-                            ++importCount;
+                        {
+                        }
 
                         if (worksheet.Cells[i, "A"].Text == "з" && AddImportCommonTask(worksheet.Cells[i, "B"].Text,
                                 worksheet.Cells[i, "C"].Text, worksheet.Cells[i, "D"].Text,
                                 worksheet.Cells[i, "H"].Text, worksheet.Cells[i, "I"].Text,
                                 worksheet.Cells[i, "J"].Text, worksheet.Cells[i, "K"].Text))
-                            ++importCount;
-                        count += worksheet.UsedRange.Rows.Count;
+                        {
+                        }
                     }
                 appExcel.Workbooks.Close();
                 appExcel.Quit();
@@ -140,20 +140,20 @@ namespace TaskBook.Tools
             catch (Exception)
             {
                 MessageBox.Show($@"Не удалось импортировать данные из файла {fileName}.");
-                var tc = TaskControl.GetInstance();
+                
                 fs?.Close();
                 return;
             }
 
             fs.Close();
         }
-        //TODO: REWORK FUNCTION
+        //TODO: REWORK FUNCTIONw
 
         private static void ExportBirthTask(Worksheet worksheet, int row, BirthTask birthTask)
         {
             worksheet.Cells.Item[row, 1]= @"др";
-            worksheet.Cells.Item[row, 2]= $"{dtos(birthTask.RemindDate.Day)}.{dtos(birthTask.RemindDate.Month)}.{birthTask.RemindDate.Year}";
-            worksheet.Cells.Item[row, 3] = birthTask.TaskTime.ToString("t");
+            worksheet.Cells.Item[row, 2]= $"{Dtos(birthTask.RemindDate.Day)}.{Dtos(birthTask.RemindDate.Month)}.{birthTask.RemindDate.Year}";
+            worksheet.Cells.Item[row, 3] = birthTask.TaskTime.ToString("t", new CultureInfo("ru-RU"));
             worksheet.Cells.set_Item(row, 4, birthTask.Surname);
             worksheet.Cells.set_Item(row, 5, birthTask.Name);
             worksheet.Cells.set_Item(row, 6, birthTask.Farthername);
@@ -165,18 +165,18 @@ namespace TaskBook.Tools
         private static void ExportCommonTask(Worksheet worksheet, int row, Task task)
         {
             worksheet.Cells.set_Item(row, 1, @"з");
-            worksheet.Cells.set_Item(row, 2,$"{dtos(task.TaskDate.Day)}.{dtos(task.TaskDate.Month)}.{task.TaskDate.Year}");
+            worksheet.Cells.set_Item(row, 2,$"{Dtos(task.TaskDate.Day)}.{Dtos(task.TaskDate.Month)}.{task.TaskDate.Year}");
             worksheet.Cells.set_Item(row, 3, task.TaskTime.TimeOfDay.ToString());
             worksheet.Cells.set_Item(row, 4, task.TaskInfo);
             worksheet.Cells.set_Item(row, 8, task.WhenRepeat.Name == "По дням недели"? task.RemindedWeekDays.ToString() :task.WhenRepeat.Name);
             worksheet.Cells.set_Item(row, 9, task.WhatImportant.Name);
-            worksheet.Cells.set_Item(row, 10, (task.IsDone) ? "+" : "-");
-            worksheet.Cells.set_Item(row, 11, (task.IsTrash) ? "+" : "-");
+            worksheet.Cells.set_Item(row, 10, task.IsDone ? "+" : "-");
+            worksheet.Cells.set_Item(row, 11, task.IsTrash ? "+" : "-");
         }
 
-        private static string dtos(int num)
+        private static string Dtos(int num)
         {
-            return num < 10 ? "0" + num : num.ToString();
+            return num < 10 ? "0" + num : num.ToString(new CultureInfo("ru-RU"));
         }
         //TODO: REWORK FUNCTION
         private static bool AddImportCommonTask(string sDate, string sTime, string taskInfo, string period, string important, string isDoneStr, string isTrashStr)
@@ -190,11 +190,13 @@ namespace TaskBook.Tools
                 if (dateStr.Length != 3)
                     return false;
 
-                var date = new DateTime(Int32.Parse(dateStr[2]), Int32.Parse(dateStr[1]), Int32.Parse(dateStr[0]));
+                var date = new DateTime(Int32.Parse(dateStr[2], new CultureInfo("ru-RU")), Int32.Parse(dateStr[1], new CultureInfo("ru-RU")), 
+                    Int32.Parse(dateStr[0], new CultureInfo("ru-RU")));
   
                 var timeStr = sTime.Split(':');
 
-                var time = new DateTime(1, 1, 1, Int32.Parse(timeStr.Any() ? timeStr[0] : "9"), Int32.Parse((timeStr.Length > 1) ? timeStr[1] : "9"), 0);
+                var time = new DateTime(1, 1, 1, Int32.Parse(timeStr.Any() ? timeStr[0] : "9", new CultureInfo("ru-RU")), 
+                    Int32.Parse((timeStr.Length > 1) ? timeStr[1] : "9", new CultureInfo("ru-RU")), 0);
                 
 
                 int repeaterId = -1;
@@ -208,7 +210,7 @@ namespace TaskBook.Tools
                 if (repeaterId == -1)
                 {
                     repeaterId = 6;
-                    Enum.TryParse(period, out weekDays);
+                    _ = Enum.TryParse(period, out weekDays);
                 }
                 
                 
@@ -268,7 +270,8 @@ namespace TaskBook.Tools
             DateTime dateTime;
             try
             {
-                dateTime = new DateTime(Int32.Parse(dateStr[2]), int.Parse(dateStr[1]), Int32.Parse(dateStr[0]));
+                dateTime = new DateTime(Int32.Parse(dateStr[2], new CultureInfo("ru-RU")), int.Parse(dateStr[1], new CultureInfo("ru-RU")), 
+                    Int32.Parse(dateStr[0], new CultureInfo("ru-RU")));
             }
             catch
             {
@@ -280,7 +283,8 @@ namespace TaskBook.Tools
             {
                 var timeStr = sTime.Split(':');
 
-                taskTime = new DateTime(1, 1, 1, Int32.Parse(timeStr.Any() ? timeStr[0] : "9"), Int32.Parse((timeStr.Length > 1) ? timeStr[1] : "9"), 0);
+                taskTime = new DateTime(1, 1, 1, Int32.Parse(timeStr.Any() ? timeStr[0] : "9", new CultureInfo("ru-RU")),
+                    Int32.Parse((timeStr.Length > 1) ? timeStr[1] : "9", new CultureInfo("ru-RU")), 0);
             }
             catch
             {

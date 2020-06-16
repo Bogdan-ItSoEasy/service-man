@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Input;
 using TaskBook.Data;
@@ -72,7 +73,7 @@ namespace TaskBook.ViewModels
                         taskInfo = (current as BirthTask).TaskInfo;
                     else
                         taskInfo = current.TaskInfo;
-                    filter = taskInfo.ToUpper().Contains(SearchLine.ToUpper());
+                    filter = taskInfo.ToUpper(new CultureInfo("ru-Ru")).Contains(SearchLine.ToUpper(new CultureInfo("ru-Ru")));
                 }
 
                 if (current.IsTrash)

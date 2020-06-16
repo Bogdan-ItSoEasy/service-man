@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using DevExpress.Xpf.Bars;
 using TaskBook.Data;
@@ -133,7 +134,7 @@ namespace TaskBook.ViewModels
 
             try
             {
-                RepeateRingTime = appSettings["repeate"] != null ? Int32.Parse(appSettings["repeate"]) : 5;
+                RepeateRingTime = appSettings["repeate"] != null ? Int32.Parse(appSettings["repeate"], new CultureInfo("ru-Ru")) : 5;
             }
             catch (Exception)
             {
@@ -144,8 +145,8 @@ namespace TaskBook.ViewModels
             IsMinimize = bool.TrueString == appSettings["minimize"];
             IsRepeat = bool.TrueString == appSettings["repeat_task"];
 
-            IsDirDefault = SaveDirName == "";
-            IsRingDefault = RingFileName == "";
+            IsDirDefault = string.IsNullOrEmpty(SaveDirName);
+            IsRingDefault = string.IsNullOrEmpty(RingFileName);
 
             ExportCommand = new RelayCommand(OnExportCommand);
             EnterCommand = new RelayCommand(OnEnterCommand);
@@ -170,7 +171,10 @@ namespace TaskBook.ViewModels
                 InitialDirectory = Serializer.GetDirName()
             };
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                saveFileDialog.Dispose();
                 return;
+            }
 
             var exportFileName = saveFileDialog.FileName;
             var splits = exportFileName.Split('.');
@@ -182,22 +186,23 @@ namespace TaskBook.ViewModels
                 ExportImportProvider.ExportXml(exportFileName);
             else
                 MessageBox.Show(@"Файлы данного расширения не поддерживаются");
+
+            saveFileDialog.Dispose();
         }
 
-
-        public string DefaultDirPath => Serializer.GetHomePath();
+        public static string DefaultDirPath => Serializer.GetHomePath();
 
         private void OnEnterCommand()
         {
             SettingProvider.SetSetting("dir", IsDirDefault ? "" : SaveDirName);
 
-            SettingProvider.SetSetting("repeat_task", _isRepeat.ToString());
+            SettingProvider.SetSetting("repeat_task", _isRepeat.ToString(new CultureInfo("ru-Ru")));
 
-            SettingProvider.SetSetting("repeate", RepeateRingTime.ToString());
+            SettingProvider.SetSetting("repeate", RepeateRingTime.ToString(new CultureInfo("ru-Ru")));
 
-            SettingProvider.SetSetting("minimize", _isMinimize.ToString());
+            SettingProvider.SetSetting("minimize", _isMinimize.ToString(new CultureInfo("ru-Ru")));
 
-            SettingProvider.SetAutoRun("autorun", _isAutoRun.ToString());
+            SettingProvider.SetAutoRun("autorun", _isAutoRun.ToString(new CultureInfo("ru-Ru")));
 
             SettingProvider.UpdateAutorun();
         }
@@ -236,6 +241,8 @@ namespace TaskBook.ViewModels
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
                 FileName = openFileDialog.FileName;
+
+            openFileDialog.Dispose();
         }
 
         private void OnSetRingFileNameCommand()
@@ -244,6 +251,8 @@ namespace TaskBook.ViewModels
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
                 RingFileName = openFileDialog.FileName;
+
+            openFileDialog.Dispose();
         }
 
         private void OnSetSaveDirNameCommand()
@@ -255,6 +264,8 @@ namespace TaskBook.ViewModels
 
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 SaveDirName = folderBrowserDialog.SelectedPath;
+
+            folderBrowserDialog.Dispose();
         }
 
         private void OnFontSettingCommand()

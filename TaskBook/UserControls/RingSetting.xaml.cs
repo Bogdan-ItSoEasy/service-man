@@ -30,34 +30,27 @@ namespace TaskBook.UserControls
             InitializeComponent();
         }
 
-
-
         public string RingName
         {
-            get { return (string)GetValue(RingNameProperty); }
-            set { SetValue(RingNameProperty, value); }
+            get => (string)GetValue(RingNameProperty);
+            set => SetValue(RingNameProperty, value);
         }
 
         public string RingFileName
         {
-            get { return (string) GetValue(RingFileNameProperty); }
-            set { SetValue(RingFileNameProperty, value); }
+            get => (string) GetValue(RingFileNameProperty);
+            set => SetValue(RingFileNameProperty, value);
         }
-
-
-
 
         public bool IsRingDefault
         {
-            get { return (bool)GetValue(IsRingDefaultProperty); }
-            set { SetValue(IsRingDefaultProperty, value); }
+            get => (bool)GetValue(IsRingDefaultProperty);
+            set => SetValue(IsRingDefaultProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for IsRingDefault.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsRingDefaultProperty =
             DependencyProperty.Register("IsRingDefault", typeof(bool), typeof(RingSetting), new PropertyMetadata(true));
-
-
 
         // Using a DependencyProperty as the backing store for RingName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty RingNameProperty =
@@ -66,34 +59,17 @@ namespace TaskBook.UserControls
         public static readonly DependencyProperty RingFileNameProperty = DependencyProperty.Register("RingFileName", typeof(string), 
             typeof(RingSetting), new PropertyMetadata(default(string)));
 
-       /* private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-            SetEnable(CheckBox.IsChecked, Box, Button);
-        }*/
-        private void SetEnable(bool? isEnable, TextBox box, Button button)
-        {
-            if (isEnable == true)
-            {
-                box.IsEnabled = false;
-                button.IsEnabled = false;
-            }
-            else
-            {
-                box.IsEnabled = true;
-                button.IsEnabled = true;
-            }
-        }
-
         private void View_OnClick(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog()
+            var openFileDialog = new OpenFileDialog()
             {
-//                InitialDirectory = Serializer.GetHomePath(),
                 RestoreDirectory = true,
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
                 RingFileName = openFileDialog.FileName;
+
+            openFileDialog.Dispose();
         }
 
         private void Play_OnClick(object sender, RoutedEventArgs e)

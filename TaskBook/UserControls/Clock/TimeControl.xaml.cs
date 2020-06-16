@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 
 namespace TaskBook.UserControls.Clock
@@ -69,14 +70,14 @@ namespace TaskBook.UserControls.Clock
 
         public static readonly DependencyProperty MinControlProperty = DependencyProperty.Register("MinControl", typeof(int), typeof(TimeControl), new PropertyMetadata(0, PropChangeCallback));
 
-        private string itoc2(int value)
+        private static string itoc2(int value)
         {
-            return (value < 10) ? "0" + value.ToString() : value.ToString();
+            return (value < 10) ? "0" + value : value.ToString(new CultureInfo("ru-Ru"));
         }
         
         private void SetTime()
         {
-            TimeBlock.Text = String.Format("{0,2}:{1,2}", itoc2(HourControl), itoc2(MinControl));
+            TimeBlock.Text = String.Format(new CultureInfo("ru-Ru"), "{0,2}:{1,2}", itoc2(HourControl), itoc2(MinControl));
         }
 
         private void Up_But_Click(object sender, RoutedEventArgs e)

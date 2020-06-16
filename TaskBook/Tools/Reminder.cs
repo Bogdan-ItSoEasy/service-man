@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -18,22 +19,17 @@ namespace TaskBook.Tools
         public event EventHandler BeginRemind;
         public event EventHandler EndRemind;
 
-        public TaskControl TC;
+        public TaskControl Tc { get; set; }
 
 
-        private static Reminder _reminder;
+        private static readonly Reminder _reminder = new Reminder();
         public static Reminder GetInstance()
         {
             return _reminder; //?? (_reminder = new Reminder());
         }
 
         private DateTime _currentDate;
-
-        static Reminder()
-        {
-            _reminder = new Reminder();
-        }
-
+        
         public event EventHandler NextDay;
         protected virtual void OnNextDay()
         {
@@ -42,8 +38,8 @@ namespace TaskBook.Tools
 
         private Reminder()
         {
-            TC = TaskControl.GetInstance();
-            TC.CostRemindedCollection.CollectionChanged += RemindedCollectionOnCollectionChanged;
+            Tc = TaskControl.GetInstance();
+            Tc.RemindedCollection.CollectionChanged += RemindedCollectionOnCollectionChanged;
             _secondRemind = 0;
             _currentDate = DateTime.Today;
 
@@ -69,16 +65,15 @@ namespace TaskBook.Tools
 
         private void RemindedCollectionOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (TaskControl.GetInstance().CostRemindedCollection.Count != 0)
+            if (TaskControl.GetInstance().RemindedCollection.Count != 0)
             {
                 BeginRemind?.Invoke(this, EventArgs.Empty);
             }
             else
             {
                 EndRemind?.Invoke(this, EventArgs.Empty);
-                _secondRemind = 0;                
-                TaskControl.GetInstance().CostRemindedCollection = new ObservableCollection<RemindedTask>();
-                TC.CostRemindedCollection.CollectionChanged += RemindedCollectionOnCollectionChanged;
+                _secondRemind = 0;
+                Tc.RemindedCollection.CollectionChanged += RemindedCollectionOnCollectionChanged;
             }
         }
 
@@ -86,19 +81,19 @@ namespace TaskBook.Tools
 
         public bool IsRemind()
         {
-            var reminder = TC.GetRemider();
+            var reminder = Tc.GetReminder();
 
             foreach (var task in reminder)
             {
-                if(!TC.CostRemindedCollection.Select(x => x.Task).ToList().Contains(task))
+                if(!Tc.RemindedCollection.Select(x => x.Task).ToList().Contains(task))
                 {
                     if(task is BirthTask)
                         BirthDayRing();
                     else
                         Ring();
-                    
-                    //Dispatcher.CurrentDispatcher.BeginInvoke((Action) (() =>
-                        TC.CostRemindedCollection.Insert(0, new RemindedTask(task));
+
+                    var rt = new RemindedTask(task);
+                    Tc.RemindedCollection.Insert(0, rt);
                 }
             }
             
@@ -109,7 +104,7 @@ namespace TaskBook.Tools
 
         private void DoRingRepeation()
         {
-            if (TC.CostRemindedCollection.Count > 0)
+            if (Tc.RemindedCollection.Count > 0)
             {
                 ++_secondRemind;
             }
@@ -118,7 +113,7 @@ namespace TaskBook.Tools
             int repeateRingTime;
             try
             {
-                repeateRingTime = appSettings["repeate"] != null ? Int32.Parse(appSettings["repeate"]) : 5;
+                repeateRingTime = appSettings["repeate"] != null ? Int32.Parse(appSettings["repeate"], new CultureInfo("ru-Ru")) : 5;
             }
             catch (Exception)
             {
@@ -153,7 +148,7 @@ namespace TaskBook.Tools
             Ring(path);
         }
 
-        public Uri GetDefaultUri()
+        public static Uri GetDefaultUri()
         {
             var path = "ring.mp3";
             return new Uri(Path.GetFullPath(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + '\\' + path),
@@ -162,17 +157,17 @@ namespace TaskBook.Tools
 
         public void Ring(string path)
         {
-            _player = new MediaPlayer();
+            Player = new MediaPlayer();
             var uri = string.IsNullOrEmpty(path) || !File.Exists(Path.GetFullPath(path)) ?
                 GetDefaultUri() :
                 new Uri(Path.GetFullPath(path), UriKind.RelativeOrAbsolute);
 
-            _player.Open(uri);
+            Player.Open(uri);
 
-            _player.Play();
+            Player.Play();
         }
 
-        public MediaPlayer _player;
+        public MediaPlayer Player { get; set; }
 
         private int _secondRemind;
 

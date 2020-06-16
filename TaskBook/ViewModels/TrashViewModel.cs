@@ -2,12 +2,13 @@
 using System.Windows.Data;
 using System.Windows.Input;
 using System;
+using System.Globalization;
 using TaskBook.Data;
 using TaskBook.Tools;
 
 namespace TaskBook.ViewModels
 {
-    class TrashViewModel : ViewModelBase
+    internal class TrashViewModel : ViewModelBase
     {
         public ListCollectionView TrashTasks { get; private set; }
 
@@ -30,9 +31,8 @@ namespace TaskBook.ViewModels
 
         public TrashViewModel()
         {
-
-            _tc = TaskControl.GetInstance();
-            TrashTasks = new CollectionViewSource { Source = _tc.AllTasks }.View as ListCollectionView;
+            var tc = TaskControl.GetInstance();
+            TrashTasks = new CollectionViewSource { Source = tc.AllTasks }.View as ListCollectionView;
 
             if (TrashTasks != null)
             {
@@ -71,7 +71,7 @@ namespace TaskBook.ViewModels
                         taskInfo = (current as BirthTask).TaskInfo;
                     else
                         taskInfo = current.TaskInfo;
-                    filter = taskInfo.ToUpper().Contains(SearchLine.ToUpper());
+                    filter = taskInfo.ToUpper(new CultureInfo("ru-Ru")).Contains(SearchLine.ToUpper(new CultureInfo("ru-Ru")));
                 }
 
                 return current.IsTrash && filter;
@@ -80,9 +80,5 @@ namespace TaskBook.ViewModels
 
             return false;
         }
-
-
-        TaskControl _tc;
-        
     }
 }

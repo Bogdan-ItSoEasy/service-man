@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TaskBook.Data;
 
 namespace TaskBook.UserControls
@@ -19,13 +9,11 @@ namespace TaskBook.UserControls
     /// <summary>
     /// Interaction logic for DayOfWeekBox.xaml
     /// </summary>
-    public partial class DayOfWeekBox : UserControl
+    public partial class DayOfWeekBox
     {
         public DayOfWeekBox()
         {
             InitializeComponent();
-
-            
         }
 
         public void SetBoxes()
@@ -35,7 +23,7 @@ namespace TaskBook.UserControls
             int i = 1;
             while (num != 0)
             {
-                (FindName("Box" + i++.ToString()) as CheckBox).IsChecked = num % 2 == 1;
+                (FindName("Box" + i++) as CheckBox).IsChecked = num % 2 == 1;
                 num /= 2;
             }
         }
@@ -55,7 +43,7 @@ namespace TaskBook.UserControls
         {
             if(!(sender is CheckBox box))
                 return;
-            var num = int.Parse(box.Name.Substring(3));
+            var num = int.Parse(box.Name.Substring(3), new CultureInfo("ru-Ru"));
 
             var day = (int)Math.Pow(2, num-1);
             WeekDaysContent ^= (WeekDays)day;

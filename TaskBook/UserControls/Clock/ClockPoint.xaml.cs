@@ -35,11 +35,8 @@ namespace TaskBook.UserControls.Clock
 
         public double Radius
         {
-
-            set
-            {
-                Grid.RenderTransformOrigin = new Point(0.5, value);
-            }
+            get => Grid.RenderTransformOrigin.Y;
+            set => Grid.RenderTransformOrigin = new Point(0.5, value);
         }
 
         public double Angle

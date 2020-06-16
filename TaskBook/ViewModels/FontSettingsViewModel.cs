@@ -65,9 +65,9 @@ namespace TaskBook.ViewModels
             FontController.SetFontFamily(FontName.RemindWindowFontName, CurrentRemind.FontFamily);
         }
 
-        public List<int> FontSizes { get; set; }
+        public List<int> FontSizes { get; }
 
-        public List<string> Fonts { get; set; }
+        public List<string> Fonts { get; }
 
         public int RemindWindowFontSize
         {

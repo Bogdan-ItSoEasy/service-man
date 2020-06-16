@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
+using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Input;
 using DevExpress.Xpf.CodeView;
@@ -47,7 +48,7 @@ namespace TaskBook.ViewModels
                 ViewTasks.Refresh();
                 
             };
-            
+
             AllTasksView = new ObservableCollection<Task>(Tc.AllTasks);
 
             Tc.CollectionUpdate += (sender, args) => Refresh();
@@ -90,7 +91,7 @@ namespace TaskBook.ViewModels
             {
                 _searchLine = value;
                 OnRefreshCommand();
-                OnPropertyChanged("SearchLine");
+                OnPropertyChanged(SearchLine);
             }
         }
         string _searchLine;
@@ -98,16 +99,66 @@ namespace TaskBook.ViewModels
         
         private void CreateDelimerTasks()
         {
-            _delimerTasks = new List<SeparatorTask>();
+            _delimerTasks = new List<SeparatorTask>
+            {
+                new SeparatorTask()
+                {
+                    TaskInfo = "Прошедшие",
+                    TaskDate = new DateTime(1, 1, 1),
+                    TaskTime = new DateTime(1, 1, 1, 0, 0, 0),
+                    ImportantId = -1
+                },
+                new SeparatorTask()
+                {
+                    TaskInfo = "Сегодня " + Task.GetDateView(DateTime.Today),
+                    TaskDate = DateTime.Now.Date,
+                    TaskTime = new DateTime(1, 1, 1, 0, 0, 0),
+                    ImportantId = -1
+                },
+                new SeparatorTask()
+                {
+                    TaskInfo = "Завтра " + Task.GetDateView(DateTime.Today.AddDays(1)),
+                    TaskDate = DateTime.Now.Date.AddDays(1),
+                    TaskTime = new DateTime(1, 1, 1, 0, 0, 0),
+                    ImportantId = -1
+                },
+                new SeparatorTask()
+                {
+                    TaskInfo = "В течение недели",
+                    TaskDate = DateTime.Now.Date.AddDays(2),
+                    TaskTime = new DateTime(1, 1, 1, 0, 0, 0),
+                    ImportantId = -1
+                },
+                new SeparatorTask()
+                {
+                    TaskInfo = "В течение месяца",
+                    TaskDate = DateTime.Now.Date.AddDays(7),
+                    TaskTime = new DateTime(1, 1, 1, 0, 0, 0),
+                    ImportantId = -1
+                },
+                new SeparatorTask()
+                {
+                    TaskInfo = "В течение трех месяцев",
+                    TaskDate = DateTime.Now.Date.AddDays(30),
+                    TaskTime = new DateTime(1, 1, 1, 0, 0, 0),
+                    ImportantId = -1
+                },
+                new SeparatorTask()
+                {
+                    TaskInfo = "В течение года",
+                    TaskDate = DateTime.Now.Date.AddDays(90),
+                    TaskTime = new DateTime(1, 1, 1, 0, 0, 0),
+                    ImportantId = -1
+                },
+                new SeparatorTask()
+                {
+                    TaskInfo = "Через год",
+                    TaskDate = DateTime.Now.Date.AddDays(365),
+                    TaskTime = new DateTime(1, 1, 1, 0, 0, 0),
+                    ImportantId = -1
+                }
+            };
 
-            _delimerTasks.Add(new SeparatorTask() { TaskInfo = "Прошедшие", TaskDate = new DateTime(1,1,1), TaskTime = new DateTime(1, 1, 1, 0, 0, 0), ImportantId = -1 });
-            _delimerTasks.Add(new SeparatorTask() { TaskInfo = "Сегодня " + Task.GetDateView(DateTime.Today), TaskDate = DateTime.Now.Date, TaskTime = new DateTime(1, 1, 1, 0, 0, 0), ImportantId = -1 });
-            _delimerTasks.Add(new SeparatorTask() { TaskInfo = "Завтра " + Task.GetDateView(DateTime.Today.AddDays(1)), TaskDate = DateTime.Now.Date.AddDays(1), TaskTime = new DateTime(1, 1, 1, 0, 0, 0), ImportantId = -1 });
-            _delimerTasks.Add(new SeparatorTask() { TaskInfo = "В течение недели", TaskDate = DateTime.Now.Date.AddDays(2), TaskTime = new DateTime(1, 1, 1, 0, 0, 0), ImportantId = -1 });
-            _delimerTasks.Add(new SeparatorTask() { TaskInfo = "В течение месяца", TaskDate = DateTime.Now.Date.AddDays(7), TaskTime = new DateTime(1, 1, 1, 0, 0, 0), ImportantId = -1 });
-            _delimerTasks.Add(new SeparatorTask() { TaskInfo = "В течение трех месяцев", TaskDate = DateTime.Now.Date.AddDays(30), TaskTime = new DateTime(1, 1, 1, 0, 0, 0), ImportantId = -1 });
-            _delimerTasks.Add(new SeparatorTask() { TaskInfo = "В течение года", TaskDate = DateTime.Now.Date.AddDays(90), TaskTime = new DateTime(1, 1, 1, 0, 0, 0), ImportantId = -1 });
-            _delimerTasks.Add(new SeparatorTask() { TaskInfo = "Через год", TaskDate = DateTime.Now.Date.AddDays(365), TaskTime = new DateTime(1, 1, 1, 0, 0, 0), ImportantId = -1 });
         }
 
         private void UpdateDelimerTasks()
@@ -120,7 +171,7 @@ namespace TaskBook.ViewModels
         private void RemoveDelimerTasks()
         {
             foreach (var delim in _delimerTasks)
-                _allTasksView.Remove(delim);
+                AllTasksView.Remove(delim);
         }
 
 
@@ -153,16 +204,8 @@ namespace TaskBook.ViewModels
             ViewTasks?.Refresh();
         }
 
-        public ObservableCollection<Task> AllTasksView
-        {
-            get => _allTasksView;
-            set
-            {
-                _allTasksView = value;
-                OnPropertyChanged("AllTasksView");
-            }
-        }
-        ObservableCollection<Task> _allTasksView;
+        public ObservableCollection<Task> AllTasksView { get; private set; }
+
 
 
         public TaskControl Tc 
@@ -171,22 +214,13 @@ namespace TaskBook.ViewModels
             set
             {
                 _tc= value;
-                OnPropertyChanged("TC");
+                OnPropertyChanged();
             }
         }
         private TaskControl _tc;
 
         
-        public List<string> ViewList
-        {
-            get => _viewList;
-            set
-            {
-                _viewList = value;
-                OnPropertyChanged("ViewList");
-            }
-        }
-        List<string> _viewList;
+        public List<string> ViewList { get; }
 
         public int ViewIndex
         {
@@ -207,7 +241,7 @@ namespace TaskBook.ViewModels
                 }
 
                 _viewIndex = value;
-                OnPropertyChanged("ViewIndex");
+                OnPropertyChanged();
             }
         }
         int _viewIndex;
@@ -225,8 +259,7 @@ namespace TaskBook.ViewModels
             if (obj is SeparatorTask)
                 return IsViewDelimerTask(obj as SeparatorTask, null);
 
-            Task current = obj as Task;
-            if (current != null)
+            if (obj is Task current)
             {
                 if (current.IsTrash)
                     return false;
@@ -234,15 +267,10 @@ namespace TaskBook.ViewModels
                 var filter = true;
                 if (!string.IsNullOrEmpty(SearchLine))
                 {
-                    string taskInfo;
-                    if (current is BirthTask)
-                        taskInfo = (current as BirthTask).TaskInfo;
-                    else
-                        taskInfo = current.TaskInfo;
-                    filter = taskInfo.ToUpper().Contains(SearchLine.ToUpper());
+                    var taskInfo = current is BirthTask task ? task.TaskInfo : current.TaskInfo;
+                    filter = taskInfo.ToUpper(new CultureInfo("ru-Ru")).Contains(SearchLine.ToUpper(new CultureInfo("ru-Ru")));
                 }
-                    
-
+                
                 return !current.IsDone && filter;
             }
 
@@ -263,7 +291,7 @@ namespace TaskBook.ViewModels
                 if (!string.IsNullOrEmpty(SearchLine))
                 {
                     var taskInfo = current.TaskInfo;
-                    filter = taskInfo.ToUpper().Contains(SearchLine.ToUpper());
+                    filter = taskInfo.ToUpper(new CultureInfo("ru-Ru")).Contains(SearchLine.ToUpper(new CultureInfo("ru-Ru")));
                 }
 
                 return !current.IsDone && filter;
@@ -286,7 +314,7 @@ namespace TaskBook.ViewModels
                 if (!string.IsNullOrEmpty(SearchLine))
                 {
                     var taskInfo = current.TaskInfo;
-                    filter = taskInfo.ToUpper().Contains(SearchLine.ToUpper());
+                    filter = taskInfo.ToUpper(new CultureInfo("ru-Ru")).Contains(SearchLine.ToUpper(new CultureInfo("ru-Ru")));
                 }
                 return !current.IsDone && filter;
             }

@@ -26,7 +26,7 @@ namespace TaskBook
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : IDisposable
     {
 
         public MainWindow()
@@ -84,7 +84,7 @@ namespace TaskBook
             var backUp = Resources[colorName];
             try
             {
-                if (SettingProvider.GetSetting(colorName+"Color") != "")
+                if (string.IsNullOrEmpty(SettingProvider.GetSetting(colorName+"Color")))
                     Resources[colorName] =
                         System.Windows.Media.ColorConverter.ConvertFromString(SettingProvider.GetSetting(colorName + "Color"));
             }
@@ -215,13 +215,6 @@ namespace TaskBook
                 CurrentWindowState = WindowState;
             }
         }
-        
- /*       protected override void OnSourceInitialized(EventArgs e)
-        {
-            base.OnSourceInitialized(e);
-            CreateTrayIcon();
-
-        }*/
 
         private NotifyIcon TrayIcon = null;
         private System.Windows.Controls.ContextMenu TrayMenu = null;
@@ -236,7 +229,8 @@ namespace TaskBook
                 {
                     Icon = TaskBook.Properties.Resources.icon2,
                     Text = @"ПО Слуга. Многое покажет, вовремя подскажет"
-                };
+                };  
+                
                 TrayMenu = Resources["TrayMenu"] as System.Windows.Controls.ContextMenu;
                 TrayIcon.DoubleClick+= delegate
                 {
@@ -391,6 +385,9 @@ namespace TaskBook
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             base.OnClosing(e);
             if (!CanClose)
             {
@@ -464,6 +461,22 @@ namespace TaskBook
         {
             SavePresentWindow();
             SaveRemindWindow();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                mutex?.Dispose();
+                TrayIcon?.Dispose();
+            }
         }
     }
 }

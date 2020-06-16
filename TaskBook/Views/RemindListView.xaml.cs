@@ -25,7 +25,7 @@ namespace TaskBook.Views
         {
             InitializeComponent();
             IsPinned = true;
-            TaskControl.GetInstance().CostRemindedCollection.CollectionChanged += CostRemindedCollectionOnCollectionChanged;
+            TaskControl.GetInstance().RemindedCollection.CollectionChanged += CostRemindedCollectionOnCollectionChanged;
         }
 
         private void CostRemindedCollectionOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -40,13 +40,10 @@ namespace TaskBook.Views
 
         private void Reshedule_OnClick(object sender, RoutedEventArgs e)
         {
-            
-            var par = ((sender as System.Windows.Controls.Button)?.Parent as Grid)?.Parent as Grid;
-     
-            if (par != null)
-                foreach (var chil in par.Children)
+            if (((sender as System.Windows.Controls.Button)?.Parent as Grid)?.Parent is Grid par)
+                foreach (var children in par.Children)
                 {
-                    var grid = chil as Grid;
+                    var grid = children as Grid;
                     if (grid != null && grid.Name == "Grid1")
                         grid.Visibility = Visibility.Hidden;
 
@@ -61,13 +58,10 @@ namespace TaskBook.Views
 
         private void Back_OnClick(object sender, RoutedEventArgs e)
         {
-           
-            var par = ((sender as System.Windows.Controls.Button)?.Parent as Grid)?.Parent as Grid;
-
-            if (par != null)
-                foreach (var chil in par.Children)
+            if (((sender as System.Windows.Controls.Button)?.Parent as Grid)?.Parent is Grid par)
+                foreach (var children in par.Children)
                 {
-                    var grid = chil as Grid;
+                    var grid = children as Grid;
                     if (grid != null && grid.Name == "Grid1")
                         grid.Visibility = Visibility.Visible;
 
@@ -82,13 +76,10 @@ namespace TaskBook.Views
 
         private void Other_OnClick(object sender, RoutedEventArgs e)
         {
-
-            var par = (((sender as System.Windows.Controls.Button)?.Parent as StackPanel)?.Parent as Grid)?.Parent as Grid;
-
-            if (par != null)
-                foreach (var chil in par.Children)
+            if ((((sender as System.Windows.Controls.Button)?.Parent as StackPanel)?.Parent as Grid)?.Parent is Grid par)
+                foreach (var children in par.Children)
                 {
-                    var grid = chil as Grid;
+                    var grid = children as Grid;
                     if (grid != null && grid.Name == "Grid1")
                         grid.Visibility = Visibility.Hidden;
 
@@ -98,7 +89,6 @@ namespace TaskBook.Views
                     if (grid != null && grid.Name == "Grid3")
                         grid.Visibility = Visibility.Visible;
                 }
-
         }
 
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -139,13 +129,10 @@ namespace TaskBook.Views
             int hour = task.TaskTime.TimeOfDay.Hours;
             int min = task.TaskTime.TimeOfDay.Minutes;
             DateTime date = task.TaskDate;
-            var data = new Dictionary<string, object>();
-            data.Add("hour", hour);
-            data.Add("min", min);
-            data.Add("date", date);
+            var data = new Dictionary<string, object> {{"hour", hour}, {"min", min}, {"date", date}};
 
 
-            var window = new DXWindow() {Topmost = true, Width= width, Height = height, Top= wnd.Top, Left = wnd.Left + wnd.Width/2- width/2, Content = new ResheduleView(data), ResizeMode=ResizeMode.NoResize };
+            var window = new DXWindow() {Topmost = true, Width= width, Height = height, Top= wnd.Top, Left = wnd.Left + wnd.Width/2- width/2, Content = new RescheduleView(data), ResizeMode=ResizeMode.NoResize };
             window.Closing += (s, en) =>
             {
                 Properties.Settings.Default.ResheduleWindowPosition = window.RestoreBounds;
@@ -188,19 +175,6 @@ namespace TaskBook.Views
             else
                 mainWindow?.ShowHideMainWindow();
         }
-
-        private void Tab_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
- 
-
-           /* if (DataContext is RemindListViewModel model && model.ChangeFocus && model.SelectedIndex != 0)
-            {
-                model.SelectedIndex = 0;
-                model.ChangeFocus = false;
-            }*/
-        }
-
-
 
         public bool IsInEditMode
         {

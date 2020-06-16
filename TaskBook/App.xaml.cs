@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Windows;
 using System.Threading;
 using System.Diagnostics;
@@ -14,7 +15,7 @@ namespace TaskBook
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : Application, System.IDisposable
     {
         private void OnAppStartup_UpdateThemeName(object sender, StartupEventArgs e)
         {
@@ -36,6 +37,20 @@ namespace TaskBook
         }
 
         Mutex mutex = new Mutex(false, "TaskBook");
-        
+
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                mutex.Dispose();
+            }
+        }
     }
 }

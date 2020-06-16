@@ -8,25 +8,25 @@ namespace TaskBook.Tools
 {
     public static class IndexAttachedProperty
     {
-        public static int GetTabItemIndex(DependencyObject obj) => (int) obj.GetValue(TabItemIndexProperty);
+        public static int GetTabItemIndex(DependencyObject item) => (int) (item?.GetValue(TabItemIndexProperty) ?? 0);
 
-        public static void SetTabItemIndex(DependencyObject obj, int value)
+        public static void SetTabItemIndex(DependencyObject item, int value)
         {
-            obj.SetValue(TabItemIndexProperty, value);
+            if (item != null) item.SetValue(TabItemIndexProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TabItemIndexProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TabItemIndexProperty =
             DependencyProperty.RegisterAttached("TabItemIndex", typeof(int), typeof(IndexAttachedProperty), new PropertyMetadata(-1));
 
-        public static bool GetTrackTabItemIndex(DependencyObject obj)
+        public static bool GetTrackTabItemIndex(DependencyObject item)
         {
-            return (bool) obj.GetValue(TrackTabItemIndexProperty);
+            return item != null && (bool) item.GetValue(TrackTabItemIndexProperty);
         }
 
-        public static void SetTrackTabItemIndex(DependencyObject obj, bool value)
+        public static void SetTrackTabItemIndex(DependencyObject item, bool value)
         {
-            obj.SetValue(TrackTabItemIndexProperty, value);
+            item?.SetValue(TrackTabItemIndexProperty, value);
         }
 
 
@@ -50,7 +50,7 @@ namespace TaskBook.Tools
         {
             if (item == null)
                 return null;
-            return condition(item) ? item : GetParent(VisualTreeHelper.GetParent(item), condition);
+            return condition != null && condition(item) ? item : GetParent(VisualTreeHelper.GetParent(item), condition);
         }
     }
 }

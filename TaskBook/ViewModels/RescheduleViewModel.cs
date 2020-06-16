@@ -10,14 +10,14 @@ using TaskBook.Tools;
 
 namespace TaskBook.ViewModels
 {
-    public class ResheduleViewModel : INotifyPropertyChanged
+    public class RescheduleViewModel : INotifyPropertyChanged
     {
-        public ResheduleViewModel()
+        public RescheduleViewModel()
         {
-            ResheduleCommand = new RelayCommand(OnResheduleCommand);
+            RescheduleCommand = new RelayCommand(OnRescheduleCommand);
         }
 
-        private void OnResheduleCommand()
+        private void OnRescheduleCommand()
         {
             _data["hour"] = Hour;
             _data["min"] = Min;
@@ -25,14 +25,11 @@ namespace TaskBook.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public ICommand ResheduleCommand { get; set; }
+        public ICommand RescheduleCommand { get; set; }
         protected void OnPropertyChanged(string v)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(v));
-            }
+            handler?.Invoke(this, new PropertyChangedEventArgs(v));
         }
 
         public int Hour
@@ -76,13 +73,16 @@ namespace TaskBook.ViewModels
 
         public Dictionary<string, object> Data
         {
-            get { return _data; }
+            get => _data;
             set
             {
                 _data = value;
-                Hour = (int)value[key: "hour"];
-                Min = (int)value[key: "min"];
-                Date = (DateTime)value[key: "date"];
+                if (value != null)
+                {
+                    Hour = (int) value[key: "hour"];
+                    Min = (int) value[key: "min"];
+                    Date = (DateTime) value[key: "date"];
+                }
             }
         }
         Dictionary<string, object> _data;

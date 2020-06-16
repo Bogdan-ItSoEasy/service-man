@@ -38,7 +38,7 @@ namespace TaskBook.Tools
                 var result = new Dictionary<string, string> { {TemplateNotChoiced, ""}};
 
                 foreach (var file in files)
-                    if(file.EndsWith(ex))
+                    if(file.EndsWith(ex, StringComparison.Ordinal))
                         try
                         {
                             var template= File.ReadAllText(file);

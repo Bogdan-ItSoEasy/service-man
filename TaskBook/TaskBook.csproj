@@ -163,12 +163,12 @@
     <Compile Include="Data\Task.cs" />
     <Compile Include="Data\TaskControl.cs" />
     <Compile Include="Data\TaskType.cs" />
+    <Compile Include="Data\WeekNumbers.cs" />
     <Compile Include="Tools\Base64Converter.cs" />
-    <Compile Include="Tools\ComonEventArgs.cs" />
+    <Compile Include="Tools\CommonEventArgs.cs" />
     <Compile Include="Tools\StrikethroughConverter.cs" />
     <Compile Include="Tools\DataCompare.cs" />
     <Compile Include="Tools\ExportImportProvider.cs" />
-    <Compile Include="Tools\FileProvider.cs" />
     <Compile Include="Tools\FontsHandler\FontController.cs" />
     <Compile Include="Tools\FontsHandler\Fonts.cs" />
     <Compile Include="Tools\FontsHandler\FontSetter.cs" />
@@ -195,12 +195,15 @@
     <Compile Include="UserControls\RingSetting.xaml.cs">
       <DependentUpon>RingSetting.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\WeekNumbersBox.xaml.cs">
+      <DependentUpon>WeekNumbersBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\AddBirthCtrlViewModel.cs" />
     <Compile Include="ViewModels\AddControlViewModel.cs" />
     <Compile Include="ViewModels\DoneViewModel.cs" />
     <Compile Include="ViewModels\FontSettingsViewModel.cs" />
     <Compile Include="ViewModels\RemindListViewModel.cs" />
-    <Compile Include="ViewModels\ResheduleViewModel.cs" />
+    <Compile Include="ViewModels\RescheduleViewModel.cs" />
     <Compile Include="ViewModels\SettingViewModel.cs" />
     <Compile Include="ViewModels\TrashViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
@@ -216,8 +219,8 @@
     <Compile Include="Views\AddComCtrlView.xaml.cs">
       <DependentUpon>AddComCtrlView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\Clock\Clock.xaml.cs">
-      <DependentUpon>Clock.xaml</DependentUpon>
+    <Compile Include="UserControls\Clock\ClockControl.xaml.cs">
+      <DependentUpon>ClockControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Clock\ClockPoint.xaml.cs">
       <DependentUpon>ClockPoint.xaml</DependentUpon>
@@ -248,8 +251,8 @@
     <Compile Include="Views\RemindListView.xaml.cs">
       <DependentUpon>RemindListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ResheduleView.xaml.cs">
-      <DependentUpon>ResheduleView.xaml</DependentUpon>
+    <Compile Include="Views\RescheduleView.xaml.cs">
+      <DependentUpon>RescheduleView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingView.xaml.cs">
       <DependentUpon>SettingView.xaml</DependentUpon>
@@ -306,6 +309,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\WeekNumbersBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -322,7 +329,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\Clock\Clock.xaml">
+    <Page Include="UserControls\Clock\ClockControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -362,7 +369,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ResheduleView.xaml">
+    <Page Include="Views\RescheduleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

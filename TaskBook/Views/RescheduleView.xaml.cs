@@ -6,21 +6,20 @@ using TaskBook.ViewModels;
 namespace TaskBook.Views
 {
     /// <summary>
-    /// Логика взаимодействия для ResheduleView.xaml
+    /// Логика взаимодействия для RescheduleView.xaml
     /// </summary>
-    public partial class ResheduleView : UserControl
+    public partial class RescheduleView : UserControl
     {
-        public ResheduleView()
+        public RescheduleView()
         {
             InitializeComponent();
         }
 
-        public ResheduleView(Dictionary<string, object> data)
+        public RescheduleView(Dictionary<string, object> data)
         {
             InitializeComponent();
 
-            var context = DataContext as ResheduleViewModel;
-            if (context == null) return;
+            if (!(DataContext is RescheduleViewModel context)) return;
 
             context.Data = data;
         }

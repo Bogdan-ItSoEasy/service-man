@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -17,15 +17,10 @@ namespace TaskBook.Views
         {
             InitializeComponent();
 
-            HistoryTasks = new ObservableCollection<HistoryTask>(TaskControl.GetInstance().GetHistoryList());
             InitDataView();
         }
 
-        public ObservableCollection<HistoryTask> HistoryTasks
-        {
-            get => (ObservableCollection<HistoryTask>)GetValue(HistoryTasksProperty);
-            set => SetValue(HistoryTasksProperty, value);
-        }
+        public ObservableCollection<HistoryTask> HistoryTasks => (ObservableCollection<HistoryTask>) GetValue(HistoryTasksProperty);
 
         public string SearchLine    
         {
@@ -40,7 +35,8 @@ namespace TaskBook.Views
 
         // Using a DependencyProperty as the backing store for HistoryTasks.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HistoryTasksProperty =
-            DependencyProperty.Register("HistoryTasks", typeof(ObservableCollection<HistoryTask>), typeof(HistoryView), new PropertyMetadata(new ObservableCollection<HistoryTask>()));
+            DependencyProperty.Register("HistoryTasks", typeof(ObservableCollection<HistoryTask>), typeof(HistoryView), 
+                new PropertyMetadata(new ObservableCollection<HistoryTask>(TaskControl.GetHistoryList())));
 
         public static readonly DependencyProperty SearchLineProperty = DependencyProperty.Register("SearchLine", typeof(string), typeof(HistoryView), new PropertyMetadata(default(string), 
             PropertyChangedCallback));
@@ -78,7 +74,7 @@ namespace TaskBook.Views
         private bool DoneFilter(object obj)
         {
             if (obj is HistoryTask current)
-                return string.IsNullOrEmpty(SearchLine) || current.TaskInfo.ToUpper().Contains(SearchLine.ToUpper());
+                return string.IsNullOrEmpty(SearchLine) || current.TaskInfo.ToUpper(new CultureInfo("ru-Ru")).Contains(SearchLine.ToUpper(new CultureInfo("ru-Ru")));
 
             return false;
         }

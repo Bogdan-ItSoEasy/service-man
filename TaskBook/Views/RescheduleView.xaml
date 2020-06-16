@@ -1,4 +1,4 @@
-﻿<UserControl xmlns:Clock="clr-namespace:TaskBook.UserControls.Clock"  x:Class="TaskBook.Views.ResheduleView"
+﻿<UserControl xmlns:Clock="clr-namespace:TaskBook.UserControls.Clock"  x:Class="TaskBook.Views.RescheduleView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -10,7 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400">
     <UserControl.DataContext>
-        <local1:ResheduleViewModel/>
+        <local1:RescheduleViewModel/>
     </UserControl.DataContext>
     <Grid>
         <Grid.RowDefinitions>
@@ -22,11 +22,11 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <clock:Clock Height="200" Width="200" Padding="0" VerticalAlignment="Top" Hour="{Binding Hour, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Min="{Binding Min, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HoursLenght="20" />
+        <clock:ClockControl Height="200" Width="200" Padding="0" VerticalAlignment="Top" Hour="{Binding Hour, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Min="{Binding Min, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" HoursLength="20" />
         <clock:TimeControl Grid.Row="0" VerticalAlignment="Bottom" HourControl="{Binding Path=Hour, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                           MinControl="{Binding Path=Min, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
         <TextBlock Grid.Row="0" VerticalAlignment="Bottom" Grid.Column="1" Text="{Binding Date ,StringFormat={}{0:dd.MM.yyyy}}" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Margin="0,10,0,0"></TextBlock>
         <telerik:RadCalendar Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Center" Width="200" SelectedDate="{Binding Date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AreWeekNumbersVisible="False"  Height="200" VerticalAlignment="Center" />
-        <Button Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Назначить новое время" Margin="10" Command="{Binding ResheduleCommand}" Click="Button_Click"></Button>
+        <Button Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Назначить новое время" Margin="10" Command="{Binding RescheduleCommand}" Click="Button_Click"></Button>
     </Grid>
 </UserControl>

@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using TaskBook.Tools;
 
 
@@ -19,7 +9,7 @@ namespace TaskBook.Views.AdditionalWindow
     /// <summary>
     /// Interaction logic for ColorSettings.xaml
     /// </summary>
-    public partial class ColorSettings : Window
+    public partial class ColorSettings
     {
         public ColorSettings()
         {
@@ -46,11 +36,11 @@ namespace TaskBook.Views.AdditionalWindow
                 ) as Color? ?? Application.Current?.MainWindow?.Resources["BirthDay"] as Color? ?? Colors.Black;
         }
 
-        public string GetColor(string colorName)
+        public static string GetColor(string colorName)
         {
             var color = SettingProvider.GetSetting(colorName);
 
-            return color == "" ? null : color;
+            return string.IsNullOrEmpty(colorName) ? null : color;
         }
 
 
@@ -63,26 +53,26 @@ namespace TaskBook.Views.AdditionalWindow
 
         public Color NormalColor
         {
-            get { return (Color) GetValue(NormalColorProperty); }
-            set { SetValue(NormalColorProperty, value); }
+            get => (Color) GetValue(NormalColorProperty);
+            set => SetValue(NormalColorProperty, value);
         }
 
         public Color ImportantColor
         {
-            get { return (Color) GetValue(ImportantColorProperty); }
-            set { SetValue(ImportantColorProperty, value); }
+            get => (Color) GetValue(ImportantColorProperty);
+            set => SetValue(ImportantColorProperty, value);
         }
 
         public Color VeryImportantColor
         {
-            get { return (Color) GetValue(VeryImportantColorProperty); }
-            set { SetValue(VeryImportantColorProperty, value); }
+            get => (Color) GetValue(VeryImportantColorProperty);
+            set => SetValue(VeryImportantColorProperty, value);
         }
 
         public Color BirthDayColor
         {
-            get { return (Color) GetValue(BirthDayColorProperty); }
-            set { SetValue(BirthDayColorProperty, value); }
+            get => (Color) GetValue(BirthDayColorProperty);
+            set => SetValue(BirthDayColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for BaseColor.  This enables animation, styling, binding, etc...
@@ -102,11 +92,11 @@ namespace TaskBook.Views.AdditionalWindow
 
         private void Save_OnClick(object sender, RoutedEventArgs e)
         {
-            SettingProvider.SetSetting("BaseColor", BaseColor.ToString());
-            SettingProvider.SetSetting("NormalColor", NormalColor.ToString());
-            SettingProvider.SetSetting("ImportantColor", ImportantColor.ToString());
-            SettingProvider.SetSetting("VeryImportantColor", VeryImportantColor.ToString());
-            SettingProvider.SetSetting("BirthDayColor", BirthDayColor.ToString());
+            SettingProvider.SetSetting("BaseColor", BaseColor.ToString(new CultureInfo("ru-RU")));
+            SettingProvider.SetSetting("NormalColor", NormalColor.ToString(new CultureInfo("ru-RU")));
+            SettingProvider.SetSetting("ImportantColor", ImportantColor.ToString(new CultureInfo("ru-RU")));
+            SettingProvider.SetSetting("VeryImportantColor", VeryImportantColor.ToString(new CultureInfo("ru-RU")));
+            SettingProvider.SetSetting("BirthDayColor", BirthDayColor.ToString(new CultureInfo("ru-RU")));
 
             Close();
         }

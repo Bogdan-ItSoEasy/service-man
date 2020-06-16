@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -111,10 +112,7 @@ namespace TaskBook.UserControls
             typeof(EditableTextBlock),
             new PropertyMetadata("{0}"));
 
-        public string FormattedText
-        {
-            get { return String.Format(TextFormat, Text); }
-        }
+        public string FormattedText => String.Format(new CultureInfo("ru-Ru"),TextFormat, Text);
 
         #endregion Properties
 

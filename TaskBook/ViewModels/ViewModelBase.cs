@@ -8,18 +8,13 @@ using System.Threading.Tasks;
 
 namespace TaskBook.ViewModels
 {
-    public class ViewModelBase : INotifyPropertyChanged, IDisposable
+    public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public void Dispose()
-        {
-            //throw new NotImplementedException();
         }
 
         protected void SetValue<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)

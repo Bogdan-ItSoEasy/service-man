@@ -32,7 +32,7 @@ namespace TaskBook.Tools
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null && ((int)value + Int32.Parse((string)parameter ?? throw new InvalidOperationException())) % 3 == 0)
+            if (value != null && ((int)value + Int32.Parse((string)parameter ?? throw new InvalidOperationException(), new CultureInfo("ru-Ru"))) % 3 == 0)
             {
                 return Visibility.Visible;
             }
@@ -171,7 +171,7 @@ namespace TaskBook.Tools
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return (double)values[0] - 110 * (double)FontController.GetFontSize(FontName.MainWindowFontName)/12-140 - (int)values[1];
+            return values != null && values.Length > 1 ?(double)values[0] - 110 * (double)FontController.GetFontSize(FontName.MainWindowFontName)/12-140 - (int)values[1] : 0;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -184,7 +184,7 @@ namespace TaskBook.Tools
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var width = Int32.Parse((string)(parameter ?? "0"));
+            var width = Int32.Parse((string)(parameter ?? "0"), new CultureInfo("ru-Ru"));
             if (value is null)
                 return width;
             var border = 10;
