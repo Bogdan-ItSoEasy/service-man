@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Configuration;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -181,19 +179,13 @@ namespace TaskBook.ViewModels
             new AddImportant() {Id = 3, Name = "Особо важная"}
         };
 
-        public WeekDays RemindedWeekDays
-        {
-            get => _remindedWeekDays;
-            set => SetValue(ref _remindedWeekDays, value);
-        }
-
-        public ObservableCollection<AddRepeater> Repeaters
+        public static ObservableCollection<AddRepeater> Repeaters
         {
             get => _repeaters;
             set => _repeaters = value;
         }
 
-        public ObservableCollection<AddImportant> Importants
+        public static ObservableCollection<AddImportant> Importants
         {
             get => _importants;
             set => _importants = value;
@@ -239,12 +231,31 @@ namespace TaskBook.ViewModels
             set => _editingTask = value;
         }
 
+        public bool IsWeekCheck
+        {
+            get => _isWeekCheck;
+            set => SetValue(ref _isWeekCheck, value);
+        }
+
+        public WeekDays RemindedWeekDays
+        {
+            get => _remindedWeekDays;
+            set => SetValue(ref _remindedWeekDays, value);
+        }
+
+        public WeekNumbers RemindedWeekNumbers
+        {
+            get => _remindedWeekNumbers;
+            set => SetValue(ref _remindedWeekNumbers, value);
+        }
 
         CommonTask _editingTask;
         private List<string> _templateList;
         private string _selectedKey;
-        private int _fontSize;
         private WeekDays _remindedWeekDays;
+        private bool _isWeekCheck;
+        private WeekNumbers _remindedWeekNumbers;
+
 
         private void GetDataFromForm(Task task)
         {
@@ -256,6 +267,7 @@ namespace TaskBook.ViewModels
             task.RepeaterId = RepeateId;
             task.ImportantId = ImportantId;
             task.RemindedWeekDays = RemindedWeekDays;
+            task.RemindedWeekNumber = IsWeekCheck ? RemindedWeekNumbers : default;
         }
     }
 

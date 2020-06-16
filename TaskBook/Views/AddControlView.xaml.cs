@@ -28,33 +28,19 @@ namespace TaskBook.Views
             ComboBox.SelectedIndex = 0;
         }
 
-      /*  public AddControlView(object task)
-        {
-            buttonContent = "Изменить";
-            CreateGridList(task);
-
-            InitializeComponent();
-
-            var dataContext = DataContext as AddControlViewModel;
-            dataContext.SetEditingTask(task);
-
-            if (task is BirthTask)
-            {
-                SwitchGrid(1);
-                ComboBox.SelectedIndex = 1;
-            }
-            else
-            {
-                SwitchGrid(0);
-                ComboBox.SelectedIndex = 0;
-            }
-        }*/
-
         void CreateGridList(object task)
         {
             var window = Window.GetWindow(this);
 
-            var comUc = new AddComCtrlView(task as CommonTask, new AddComCtrlViewModel() { RepeateId = 0, DataDate = DateTime.Today, DataTime = new DateTime(1, 1, 1, DateTime.Now.Hour, DateTime.Now.Minute, 0), Hour = DateTime.Now.Hour, Min = DateTime.Now.Minute }) { ButtonContent = buttonContent };
+            var comUc = new AddComCtrlView(new AddComCtrlViewModel()
+                                            {
+                                                RepeateId = 0,
+                                                DataDate = DateTime.Today,
+                                                DataTime = new DateTime(1, 1, 1, DateTime.Now.Hour, DateTime.Now.Minute, 0),
+                                                Hour = DateTime.Now.Hour,
+                                                Min = DateTime.Now.Minute
+                                            }) { ButtonContent = buttonContent };
+
             var birthUc = new AddBirthCtrlView(task as BirthTask) { ButtonContent = buttonContent };
 
             (comUc.DataContext as AddComCtrlViewModel).RequestClose += (s, e) => RequestClose.Invoke(this, EventArgs.Empty);
@@ -83,9 +69,7 @@ namespace TaskBook.Views
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBox = sender as ComboBox;
-
-            if (comboBox == null)
+            if (!(sender is ComboBox comboBox))
                 return;
             SwitchGrid(comboBox.SelectedIndex);
         }

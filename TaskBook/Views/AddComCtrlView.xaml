@@ -32,6 +32,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            
             <RowDefinition />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -39,7 +40,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <clock1:Clock Width="200" Height="200" HorizontalAlignment="Left" Hour="{Binding Hour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Min="{Binding Min, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   HoursLenght="20" Margin="5,0,0,0"/>
+        <clock1:ClockControl Width="200" Height="200" HorizontalAlignment="Left" Hour="{Binding Hour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Min="{Binding Min, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   HoursLength="20" Margin="5,0,0,0"/>
 
         
         <clock1:TimeControl x:Name="Time"  HorizontalAlignment="Center" Grid.Row="1"  Grid.Column="0" Margin="0,10,0,0"
@@ -82,6 +83,36 @@
             <ComboBox ItemsSource="{Binding Importants, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top"
                       SelectedItem="{Binding WhatImportant, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" Width="120" Margin="5,5,5,5"/>
         </StackPanel>
+
+        <CheckBox Grid.Row="2" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="По неделям" Name="WeekCheck"
+                  IsChecked="{Binding IsWeekCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <CheckBox.Style>
+                <Style TargetType="CheckBox">
+                    <Setter Property="IsEnabled" Value="False"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RepeateId}" Value="6">
+                            <Setter Property="IsEnabled" Value="True"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </CheckBox.Style>
+        </CheckBox>
+
+        <userControls:WeekNumbersBox Grid.Row="3" Grid.Column="0" WeekNumbersContent="{Binding RemindedWeekNumbers, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            <userControls:WeekNumbersBox.Style>
+                <Style TargetType="userControls:WeekNumbersBox">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsWeekCheck}" Value="false">
+                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding RepeateId}" Value="6">
+                            <Setter Property="IsEnabled" Value="True"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </userControls:WeekNumbersBox.Style>
+        </userControls:WeekNumbersBox>
 
         <TextBox TextWrapping="Wrap" AcceptsReturn="True"  Grid.Row="4" Margin="5"   Text="{Binding Data}" Grid.ColumnSpan="2"  
                  Grid.Column="0" VerticalContentAlignment="Top" SpellCheck.IsEnabled="true" Style="{StaticResource FontStyle}"/>

@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using TaskBook.Tools;
 
 namespace TaskBook.Data
-{   
+{
     [DataContract]
     public class Task  : INotifyPropertyChanged
     {
@@ -21,7 +21,10 @@ namespace TaskBook.Data
             }
         }
 
-        public static ObservableCollection<Repeater> RepeatersInfo { get; private set; } = new ObservableCollection<Repeater>()
+        [DataMember]
+        public WeekNumbers RemindedWeekNumber { get; set; }
+
+        public static ObservableCollection<Repeater> RepeatersInfo { get; } = new ObservableCollection<Repeater>()
         {
             new Repeater() {Id = 0, Name = "Не повторять"},
             new Repeater() {Id = 1, Name = "Ежедневно"},
@@ -153,7 +156,8 @@ namespace TaskBook.Data
                     case 5:
                         return RepeatersInfo[5].Name;
                     case 6:
-                        return RemindedWeekDays.ToString();
+                        return (RemindedWeekNumber == 0 ? "" : RemindedWeekNumber.GetString() + " ") +
+                               (RemindedWeekDays == 0 ? "" : RemindedWeekDays.ToString());
                     default:
                         return "";
                 }
@@ -167,9 +171,9 @@ namespace TaskBook.Data
 
         public string DateView => GetDateView(TaskDate);
 
-        public int DateWidth => 100 * FontController.GetFontSize(FontName.MainWindowFontName) / 12;
+        public static int DateWidth => 100 * FontController.GetFontSize(FontName.MainWindowFontName) / 12;
 
-        public int DayWidth => 85 * FontController.GetFontSize(FontName.MainWindowFontName) / 12;
+        public static int DayWidth => 85 * FontController.GetFontSize(FontName.MainWindowFontName) / 12;
 
         public bool IsThatDay =>TaskDate.Date == DateTime.Today.Date || TaskDate.Date == DateTime.Today.AddDays(1).Date;
 
@@ -353,7 +357,7 @@ namespace TaskBook.Data
                 return true;
             }
 
-            if (task.TaskInfo == null)
+            if (task?.TaskInfo == null)
                 return false;
 
             return true;
@@ -376,7 +380,7 @@ namespace TaskBook.Data
             if (NeedToAddInHistory && IsDone)
             {
                 NeedToAddInHistory = false;
-                TaskControl.GetInstance().AddToHistoryList(this);
+                TaskControl.AddToHistoryList(this);
             }
 
 
@@ -407,7 +411,7 @@ namespace TaskBook.Data
                 {
                     if(RemindedWeekDays == 0)
                         return;
-                    while (!RemindingDayOfWeek() || TaskDate.Date.Add(TaskTime.TimeOfDay) < DateTime.Now)
+                    while (!(RemindingDayOfWeek() && RemindingWeekNumber()) || TaskDate.Date.Add(TaskTime.TimeOfDay) < DateTime.Now)
                         TaskDate = TaskDate.AddDays(1);
                 }
                     
@@ -428,9 +432,19 @@ namespace TaskBook.Data
             return day == (day & (int) RemindedWeekDays);
         }
 
-        public bool NeedToAddInHistory { get; set;}
+        private bool RemindingWeekNumber()
+        {
+            return RemindingWeekNumber(TaskDate);
+        }
 
-        
+        private bool RemindingWeekNumber(DateTime dateTime)
+        {
+            var weekNumber = (int)Math.Pow(2, dateTime.Day / 7);
+
+            return RemindedWeekNumber == default || (weekNumber & (int) RemindedWeekNumber) == weekNumber;
+        }
+
+        public bool NeedToAddInHistory { get; set;}
 
         public void CorrectTime()
         {
@@ -463,9 +477,10 @@ namespace TaskBook.Data
         private DateTime NextDayOfWeekRemind()
         {
             var result = TaskDate.AddDays(1);
-            while (!RemindingDayOfWeek(result)) result = result.AddDays(1);
+            while (!(RemindingDayOfWeek(result) && RemindingWeekNumber(result))) result = result.AddDays(1);
 
             return result;
         }
+
     }
 }

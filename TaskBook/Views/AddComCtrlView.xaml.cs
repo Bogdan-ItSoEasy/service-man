@@ -15,7 +15,7 @@ namespace TaskBook.Views
 
         }
 
-        internal AddComCtrlView(object task, AddComCtrlViewModel context)
+        internal AddComCtrlView(AddComCtrlViewModel context)
         {
             InitializeComponent();
 
