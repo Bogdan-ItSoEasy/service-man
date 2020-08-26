@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="TaskBook.Views.RemindViewCostil"
+﻿<UserControl x:Class="TaskBook.Views.RemindListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -63,7 +63,7 @@
                 Click="ActiveMainWindow_OnClick" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0" Padding="0">
             <Image Source="..\Resources\181.png"></Image>
         </Button>
-        <telerik:RadTabControl Name="Tab" Grid.Row="1" ItemsSource="{Binding TC.RemindedCollection}" 
+        <telerik:RadTabControl Name="Tab" Grid.Row="1" ItemsSource="{Binding RemindedCollection, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                     SelectedItem="{Binding SelectedTask, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                     SelectedIndex="{Binding SelectedIndex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" AllowDragReorder="True" SelectionChanged="Tab_OnSelectionChanged">
             <telerik:RadTabControl.Template>
@@ -135,8 +135,8 @@
                         </Grid.RowDefinitions>
 
                         <userControls:EditableTextBlock Name="EditBlock" Padding="10" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}"  
-                                     Text="{Binding Path=Task.TaskInfo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  
-                                   ToolTip="{Binding Task.TaskInfo}" IsInEditMode="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:RemindViewCostil}},
+                                     Text="{Binding Path=Task.TaskRemindInfo, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Task="{Binding Task}"
+                                   ToolTip="{Binding Task.TaskInfo}" IsInEditMode="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:RemindListView}},
                             Path=IsInEditMode, Mode=TwoWay}"/>
                         
 
@@ -182,7 +182,7 @@
                                         <Style TargetType="Image">
                                             <Setter Property="Source" Value="..\Resources\pen.png"></Setter>
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:RemindViewCostil}},
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:RemindListView}},
                                                 Path=IsInEditMode}" Value="True">
                                                     <Setter Property="Source" Value="..\Resources\done.jpg"></Setter>
                                                 </DataTrigger>

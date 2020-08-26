@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DevExpress.Data.XtraReports.ServiceModel.DataContracts;
+using TaskBook.Data;
 using TaskBook.Tools;
 
 namespace TaskBook.UserControls
@@ -81,6 +83,18 @@ namespace TaskBook.UserControls
             typeof(bool),
             typeof(EditableTextBlock),
             new PropertyMetadata(false, PropertyChangedCallback));
+
+
+
+        public Task Task
+        {
+            get => (Task)GetValue(TaskProperty);
+            set => SetValue(TaskProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for TaskType.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TaskProperty =
+            DependencyProperty.Register("Task", typeof(Task), typeof(EditableTextBlock), new PropertyMetadata(default));
 
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
