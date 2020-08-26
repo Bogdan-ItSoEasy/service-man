@@ -136,7 +136,7 @@ namespace TaskBook.ViewModels
             {
                 RepeateRingTime = appSettings["repeate"] != null ? Int32.Parse(appSettings["repeate"], new CultureInfo("ru-Ru")) : 5;
             }
-            catch (Exception)
+            catch (FormatException)
             {
                 RepeateRingTime = 5;
             }
@@ -166,8 +166,8 @@ namespace TaskBook.ViewModels
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
-                Filter = @"XML File|*.xml|Excel File|*.xlsx",
-                Title = @"Выберете файл экспорта",
+                Filter = Properties.Resources.ResourceManager.GetString("Formats", CultureInfo.CurrentCulture),
+                Title = Properties.Resources.ResourceManager.GetString("ExportFileChoice", CultureInfo.CurrentCulture),
                 InitialDirectory = Serializer.GetDirName()
             };
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
@@ -185,7 +185,7 @@ namespace TaskBook.ViewModels
             else if (extention == "xml")
                 ExportImportProvider.ExportXml(exportFileName);
             else
-                MessageBox.Show(@"Файлы данного расширения не поддерживаются");
+                MessageBox.Show(Properties.Resources.ResourceManager.GetString("FileNotSupports", CultureInfo.CurrentCulture));
 
             saveFileDialog.Dispose();
         }
@@ -215,7 +215,7 @@ namespace TaskBook.ViewModels
 
             if (!File.Exists(FileName))
             {
-                MessageBox.Show(@"Файл импорта не существует");
+                MessageBox.Show(Properties.Resources.ResourceManager.GetString("FileNotExists", CultureInfo.CurrentCulture));
                 return;
             }
             var splits = FileName.Split('.');
@@ -226,7 +226,7 @@ namespace TaskBook.ViewModels
             else if (extention == "xml")
                 ExportImportProvider.ImportFromXml(FileName);
             else
-                MessageBox.Show(@"Файлы данного расширения не поддерживаются");
+                MessageBox.Show(Properties.Resources.ResourceManager.GetString("FileNotSupports", CultureInfo.CurrentCulture));
         }
 
 
@@ -234,8 +234,8 @@ namespace TaskBook.ViewModels
         {
             OpenFileDialog openFileDialog = new OpenFileDialog()
             {
-                Filter = @"Excel File|*.xlsx|XML File|*.xml",
-                Title = @"Выберете файл экспорта",
+                Filter = Properties.Resources.ResourceManager.GetString("Formats", CultureInfo.CurrentCulture),
+                Title = Properties.Resources.ResourceManager.GetString("ImportFileChoice", CultureInfo.CurrentCulture),
                 InitialDirectory = Serializer.GetDefaultPath(),
             };
 

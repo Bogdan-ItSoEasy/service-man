@@ -21,7 +21,7 @@ namespace TaskBook.Tools
                 Serializer.CreateDirIfNotExist(masterDir);
                 _masterDir = masterDir;
             }
-            catch (Exception)
+            catch (IOException)
             {
             }
             
@@ -30,34 +30,31 @@ namespace TaskBook.Tools
         public static string TemplateNotChoiced = "Шаблон не выбран";
 
         public Dictionary<string, string> LoadTemplates()
-        { 
-            try
-            {                  
-              
-                var files = Directory.GetFiles(_masterDir);
-                var result = new Dictionary<string, string> { {TemplateNotChoiced, ""}};
+        {
+            if(!Directory.Exists(_masterDir))
+              return new Dictionary<string, string>();
 
-                foreach (var file in files)
-                    if(file.EndsWith(ex, StringComparison.Ordinal))
-                        try
-                        {
-                            var template= File.ReadAllText(file);
-                            var fileName = file.Split('\\').Last();
-                            if (string.IsNullOrEmpty(template))
-                                continue;
-                            result.Add(fileName.Substring(0, fileName.Length - ex.Length), template);
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    
+            var files = Directory.GetFiles(_masterDir);
+            var result = new Dictionary<string, string> { {TemplateNotChoiced, ""}};
 
-                return result;
-            }
-            catch (Exception )
-            {
-               return new Dictionary<string, string>();
-            }
+            if(files.Length == 0)
+                return new Dictionary<string, string>();
+
+            foreach (var file in files)
+                if(file.EndsWith(ex, StringComparison.Ordinal))
+                    try
+                    {
+                        var template= File.ReadAllText(file);
+                        var fileName = file.Split('\\').Last();
+                        if (string.IsNullOrEmpty(template))
+                            continue;
+                        result.Add(fileName.Substring(0, fileName.Length - ex.Length), template);
+                    }
+                    catch (IOException)
+                    {
+                    }
+            
+            return result;
         }
 
         public void SaveTemplateDialog(string data)

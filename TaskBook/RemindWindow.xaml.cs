@@ -1,9 +1,11 @@
-﻿namespace TaskBook
+﻿using System;
+
+namespace TaskBook
 {
     /// <summary>
     /// Interaction logic for RemindWindow.xaml
     /// </summary>
-    public partial class RemindWindow
+    public partial class RemindWindow : IDisposable
     {
         public RemindWindow()
         {
@@ -19,6 +21,11 @@
             if(!CanClose)
                 e.Cancel = true;
 
+        }
+
+        public void Dispose()
+        {
+            RemindListView.Dispose();
         }
     }
 }

@@ -17,22 +17,30 @@ using Telerik.Windows.Controls;
 namespace TaskBook.Views
 {
     /// <summary>
-    /// Interaction logic for RemindViewCostil.xaml
+    /// Interaction logic for RemindListView.xaml
     /// </summary>
-    public partial class RemindViewCostil : UserControl
+    public partial class RemindListView : UserControl, IDisposable
     {
-        public RemindViewCostil()
+        public RemindListView()
         {
             InitializeComponent();
             IsPinned = true;
-            TaskControl.GetInstance().RemindedCollection.CollectionChanged += CostRemindedCollectionOnCollectionChanged;
+            var rc = TaskControl.GetInstance().RemindedCollection;
+            rc.CollectionChanged += CostRemindedCollectionOnCollectionChanged;
+        }
+        public void Dispose()
+        { 
+            TaskControl.GetInstance().RemindedCollection.CollectionChanged -= CostRemindedCollectionOnCollectionChanged;
+            Tab.BindingGroup = null;
+            Tab.ItemsSource = null;
+            (DataContext as RemindListViewModel)?.Dispose();
         }
 
         private void CostRemindedCollectionOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add &&
                 e.NewItems.Count != 0)
-            {
+            { 
                 Tab.SelectedIndex = 0;
                 //Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => ));
             }
@@ -165,7 +173,7 @@ namespace TaskBook.Views
 
         // Using a DependencyProperty as the backing store for IsPinned.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsPinnedProperty =
-            DependencyProperty.Register("IsPinned", typeof(bool), typeof(RemindViewCostil), new PropertyMetadata(true));
+            DependencyProperty.Register("IsPinned", typeof(bool), typeof(RemindListView), new PropertyMetadata(true));
 
         private void ActiveMainWindow_OnClick(object sender, RoutedEventArgs e)
         {
@@ -184,7 +192,7 @@ namespace TaskBook.Views
 
         // Using a DependencyProperty as the backing store for IsInEditMode.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsInEditModeProperty =
-            DependencyProperty.Register("IsInEditMode", typeof(bool), typeof(RemindViewCostil), new PropertyMetadata(false));
+            DependencyProperty.Register("IsInEditMode", typeof(bool), typeof(RemindListView), new PropertyMetadata(false));
 
 
 
@@ -197,6 +205,5 @@ namespace TaskBook.Views
         {
             IsInEditMode = false;
         }
-
     }
 }

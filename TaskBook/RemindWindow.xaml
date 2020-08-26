@@ -10,6 +10,6 @@
              ShowInTaskbar="False"
     Padding="0">
     <Grid>
-        <views:RemindViewCostil></views:RemindViewCostil>
+        <views:RemindListView x:Name="RemindListView"></views:RemindListView>
     </Grid>
 </dx:DXWindow>

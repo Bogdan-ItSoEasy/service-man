@@ -66,7 +66,7 @@ namespace TaskBook.ViewModels
             set
             {
                 SetValue(ref _selectedKey, value);
-                if(_templates.ContainsKey(SelectedKey) && string.IsNullOrEmpty(_templates[SelectedKey]))
+                if(_templates.ContainsKey(SelectedKey) && !string.IsNullOrEmpty(_templates[SelectedKey]))
                     Data = _templates[SelectedKey];
             }
         }

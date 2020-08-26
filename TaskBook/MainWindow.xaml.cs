@@ -11,6 +11,7 @@ using MessageBox = System.Windows.MessageBox;
 using System.Threading;
 
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using DevExpress.Xpf.Core.Native;
 using Microsoft.Win32;
@@ -88,7 +89,7 @@ namespace TaskBook
                     Resources[colorName] =
                         System.Windows.Media.ColorConverter.ConvertFromString(SettingProvider.GetSetting(colorName + "Color"));
             }
-            catch (Exception)
+            catch (FormatException)
             {
                 Resources[colorName] = backUp;
             }
@@ -173,31 +174,24 @@ namespace TaskBook
         {
             rw = new RemindWindow();
             SetResize(rw);
-            try
+
+            Rect bounds = Properties.Settings.Default.RemindWindow;
+
+            if(bounds.Equals(new Rect(0,0,0,0)))
             {
-                Rect bounds = Properties.Settings.Default.RemindWindow;
-
-                if(bounds.Equals(new Rect(0,0,0,0)))
-                {
-                    rw.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-                }
-               
-
-                rw.Top = bounds.Top;
-                rw.Left = bounds.Left;
-
-                if (rw.SizeToContent == SizeToContent.Manual)
-                {
-                    rw.Width = bounds.Width;
-                    rw.Height = bounds.Height;
-                }
+                rw.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             }
-            catch
+           
+
+            rw.Top = bounds.Top;
+            rw.Left = bounds.Left;
+
+            if (rw.SizeToContent == SizeToContent.Manual)
             {
-                rw.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen; 
+                rw.Width = bounds.Width;
+                rw.Height = bounds.Height;
             }
-            rw.Closed += (sender, args) => 
-            rw = null;
+
             rw.Show();
         }
 
@@ -228,9 +222,8 @@ namespace TaskBook
                 TrayIcon = new NotifyIcon
                 {
                     Icon = TaskBook.Properties.Resources.icon2,
-                    Text = @"ПО Слуга. Многое покажет, вовремя подскажет"
-                };  
-                
+                    Text = TaskBook.Properties.Resources.ResourceManager.GetString("Description", CultureInfo.CurrentCulture),
+                };
                 TrayMenu = Resources["TrayMenu"] as System.Windows.Controls.ContextMenu;
                 TrayIcon.DoubleClick+= delegate
                 {
@@ -277,81 +270,29 @@ namespace TaskBook
             }
         }
 
-        private WindowState fCurrentWindowState = WindowState.Normal;
-
-        public WindowState CurrentWindowState
-        {
-            get { return fCurrentWindowState; }
-            set { fCurrentWindowState = value; }
-        }
-
-        public void ToPresentView()
-        {
-            Content = new PresentView();
-            SaveWindow();
-            Title = "Слуга";
-            RestorePresentWindow();        
-            ShowInTaskbar = false;
-            StateChanged += (o, args) =>
-            {
-
-
-            };
-        }
-
-      
-
-        private void RestoreWindow()
-        {
-            try
-            {
-                Rect bounds = Properties.Settings.Default.WindowsPosition;
-                this.Top = bounds.Top;
-                this.Left = bounds.Left;
-
-                if (this.SizeToContent == SizeToContent.Manual)
-                {
-                    this.Width = bounds.Width;
-                    this.Height = bounds.Height;
-                }
-            }
-            catch
-            {
-                this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen; ;
-            }
-
-        }
+        public WindowState CurrentWindowState { get; set; } = WindowState.Normal;
 
         private void RestorePresentWindow()
         {
-           
-            try
-            {
-                Rect bounds = Properties.Settings.Default.PresentWindowsPosition;
-                var curBounds = SystemInformation.VirtualScreen;
-                if (bounds.Equals(new Rect(0, 0, 0, 0)) || curBounds.Top < bounds.Top || curBounds.Left < bounds.Left)
-                {
-                    this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-                    this.Height = 500;
-                    this.Width = 500;
-                    return;
-                }
+            Rect bounds = Properties.Settings.Default.PresentWindowsPosition;
+            var curBounds = SystemInformation.VirtualScreen;
 
-                
-                this.Top = bounds.Top;
-                this.Left = bounds.Left;
-
-                if (this.SizeToContent == SizeToContent.Manual)
-                {
-                    this.Width = bounds.Width;
-                    this.Height = bounds.Height;
-                }
-            }
-            catch
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+            if (bounds.Equals(new Rect(0, 0, 0, 0)) || curBounds.Top < bounds.Top || curBounds.Left < bounds.Left)
             {
-                this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen; ;
+                this.Height = 500;
+                this.Width = 500;
+                return;
             }
 
+            this.Top = bounds.Top;
+            this.Left = bounds.Left;
+
+            if (this.SizeToContent == SizeToContent.Manual)
+            {
+                this.Width = bounds.Width;
+                this.Height = bounds.Height;
+            }
         }
         private void SaveWindow()
         {
@@ -419,6 +360,7 @@ namespace TaskBook
                 SaveRemindWindow();
                 rw.CanClose = true;
                 rw.Close();
+                rw.Dispose();
                 rw = null;
             }
         }

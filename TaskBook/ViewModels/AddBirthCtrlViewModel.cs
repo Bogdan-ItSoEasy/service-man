@@ -39,7 +39,7 @@ namespace TaskBook.ViewModels
         {
             if (string.IsNullOrEmpty(Surname) && string.IsNullOrEmpty(Name) && string.IsNullOrEmpty(Farthername))
             {
-                MessageBox.Show(Resources.NotData);
+                MessageBox.Show(Resources.Description);
 
                 return;
             }

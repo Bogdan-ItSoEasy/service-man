@@ -7,17 +7,20 @@ using System.Windows.Input;
 using System.Diagnostics;
 using System.Windows;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Threading;
 using TaskBook.Data;
 using TaskBook.Tools;
 
 namespace TaskBook.ViewModels
 {
-    public class RemindListViewModel : ViewModelBase
+    public class RemindListViewModel : ViewModelBase, IDisposable
     {
         public FontSetter FontSetter { get; } = new FontSetter(FontName.RemindWindowFontName);
 
@@ -25,7 +28,9 @@ namespace TaskBook.ViewModels
         {
 
             TC = TaskControl.GetInstance();
-            
+            Reminder.GetInstance().UpdateCollection();
+            RemindedCollection = TC.RemindedCollection;
+
             DoneCommand = new RelayCommand<string>(OnDoneCommand);
 
             ToBackGridCommand = new RelayCommand<RemindedTask>(OnToBackGridCommand);
@@ -203,6 +208,7 @@ namespace TaskBook.ViewModels
         }
 
         public TaskControl TC { get; set; }
+        public ObservableCollection<RemindedTask> RemindedCollection { get; set; }
 
         public ICommand DoneCommand { get; private set; }
         public ICommand ResheduleCommand { get; private set; }
@@ -230,6 +236,7 @@ namespace TaskBook.ViewModels
             UpdateTask(task);
             OnDelCommand(id);
             TC.SaveCurrentTask();
+
         }
 
         private void UpdateTask(Task task)
@@ -261,6 +268,11 @@ namespace TaskBook.ViewModels
         {
             get => _fontSize;
             set => SetValue(ref _fontSize, value);
+        }
+
+        public void Dispose()
+        {
+            RemindedCollection = null;
         }
     }
 }

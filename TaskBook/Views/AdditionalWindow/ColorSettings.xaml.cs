@@ -34,13 +34,13 @@ namespace TaskBook.Views.AdditionalWindow
             BirthDayColor =
                 System.Windows.Media.ColorConverter.ConvertFromString(GetColor("BirthDayColor")
                 ) as Color? ?? Application.Current?.MainWindow?.Resources["BirthDay"] as Color? ?? Colors.Black;
-        }
+        } 
 
         public static string GetColor(string colorName)
         {
             var color = SettingProvider.GetSetting(colorName);
 
-            return string.IsNullOrEmpty(colorName) ? null : color;
+            return string.IsNullOrEmpty(colorName) || string.IsNullOrEmpty(color) ? null : color;
         }
 
 

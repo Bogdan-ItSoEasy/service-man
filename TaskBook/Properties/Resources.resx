@@ -124,7 +124,28 @@
   <data name="ring" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ring.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="NotData" xml:space="preserve">
-    <value>Отсутствуют данные</value>
+  <data name="Description" xml:space="preserve">
+    <value>ПО Слуга. Многое покажет, вовремя подскажет.</value>
+  </data>
+  <data name="ExportDone" xml:space="preserve">
+    <value>Экспорт выполнен.</value>
+  </data>
+  <data name="ExportFileChoice" xml:space="preserve">
+    <value>Выберете файл экспорта</value>
+  </data>
+  <data name="FileNotExists" xml:space="preserve">
+    <value>Файл импорта не существует</value>
+  </data>
+  <data name="FileNotSupports" xml:space="preserve">
+    <value>Файлы данного расширения не поддерживаются</value>
+  </data>
+  <data name="Formats" xml:space="preserve">
+    <value>XML File|*.xml|Excel File|*.xlsx</value>
+  </data>
+  <data name="ImportDone" xml:space="preserve">
+    <value>Импорт успешно выполнен.</value>
+  </data>
+  <data name="ImportFileChoice" xml:space="preserve">
+    <value>Выберете файл импорта</value>
   </data>
 </root>

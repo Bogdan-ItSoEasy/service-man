@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 
 namespace TaskBook.Data
@@ -160,7 +161,7 @@ namespace TaskBook.Data
             OnCollectionUpdate();
         }
 
-        public ObservableCollection<RemindedTask> RemindedCollection { get; }
+        public ObservableCollection<RemindedTask> RemindedCollection { get; set; }
 
         public void DelCostTaskById(string id)
         {
@@ -212,5 +213,7 @@ namespace TaskBook.Data
         {
             return HistoryListProvider.GetHistoryList();
         }
+
+        
     }
 }

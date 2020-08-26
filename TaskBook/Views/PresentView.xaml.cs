@@ -187,36 +187,9 @@ namespace TaskBook.Views
 
         public static void RestoreWindow(System.Windows.Rect setting, Window window, int stdHeight=0, int stdWidth=0, bool useStd=false)
         {
-   
-            try
-            {
-                Rect bounds = setting;
+            Rect bounds = setting;
 
-                if(bounds.Equals(new Rect(0,0,0,0)) || useStd)
-                {
-                    if (window != null)
-                    {
-                        window.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-                        window.Height = (stdHeight != 0) ? stdHeight : window.Height;
-                        window.Width = (stdWidth != 0) ? stdWidth : window.Width;
-                    }
-
-                    return;
-                }
-
-                if (window != null)
-                {
-                    window.Top = bounds.Top;
-                    window.Left = bounds.Left;
-
-                    if (window.SizeToContent == SizeToContent.Manual)
-                    {
-                        window.Width = bounds.Width;
-                        window.Height = bounds.Height;
-                    }
-                }
-            }
-            catch
+            if(bounds.Equals(new Rect(0,0,0,0)) || useStd)
             {
                 if (window != null)
                 {
@@ -224,15 +197,27 @@ namespace TaskBook.Views
                     window.Height = (stdHeight != 0) ? stdHeight : window.Height;
                     window.Width = (stdWidth != 0) ? stdWidth : window.Width;
                 }
+
+                return;
             }
 
+            if (window != null)
+            {
+                window.Top = bounds.Top;
+                window.Left = bounds.Left;
+
+                if (window.SizeToContent == SizeToContent.Manual)
+                {
+                    window.Width = bounds.Width;
+                    window.Height = bounds.Height;
+                }
+            }
         }
 
         Window aw;
         Window dw;
         private Window _tw;
         Window dlw;
-
 
     }
 }

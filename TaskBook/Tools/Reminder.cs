@@ -54,6 +54,14 @@ namespace TaskBook.Tools
             
         }
 
+
+        public void UpdateCollection()
+        {
+            Tc.RemindedCollection.CollectionChanged -= RemindedCollectionOnCollectionChanged;
+            Tc.RemindedCollection = new ObservableCollection<RemindedTask>(Tc.RemindedCollection);
+            Tc.RemindedCollection.CollectionChanged += RemindedCollectionOnCollectionChanged;
+        }
+
         private void CheckDay()
         {
             if(Equals(_currentDate, DateTime.Today))
@@ -73,11 +81,9 @@ namespace TaskBook.Tools
             {
                 EndRemind?.Invoke(this, EventArgs.Empty);
                 _secondRemind = 0;
-                Tc.RemindedCollection.CollectionChanged += RemindedCollectionOnCollectionChanged;
+                //Tc.RemindedCollection.CollectionChanged += RemindedCollectionOnCollectionChanged;
             }
         }
-
-
 
         public bool IsRemind()
         {
@@ -104,7 +110,7 @@ namespace TaskBook.Tools
 
         private void DoRingRepeation()
         {
-            if (Tc.RemindedCollection.Count > 0)
+            if (Tc.RemindedCollection.Any())
             {
                 ++_secondRemind;
             }
@@ -115,7 +121,7 @@ namespace TaskBook.Tools
             {
                 repeateRingTime = appSettings["repeate"] != null ? Int32.Parse(appSettings["repeate"], new CultureInfo("ru-Ru")) : 5;
             }
-            catch (Exception)
+            catch (FormatException)
             {
                 repeateRingTime = 5;
                 

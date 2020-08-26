@@ -41,6 +41,7 @@ namespace TaskBook.Data
             get => _hour;
             set => SetValue(ref _hour, value);
         }
+
         private int _hour;
 
         public override string ToString()

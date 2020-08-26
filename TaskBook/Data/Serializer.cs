@@ -41,7 +41,7 @@ namespace TaskBook.Data
         public ObservableCollection<Task> Load()
         {
             var dirName = GetDirName();
-            ObservableCollection<Task> loadData;
+            ObservableCollection<Task> loadData = null;
             CreateDirIfNotExist(dirName);
             string fileName = Path.Combine(dirName, "task.data");
 
@@ -56,7 +56,12 @@ namespace TaskBook.Data
                 fs = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 LoadXml(fs, out loadData);
             }
-            catch (Exception)
+            catch (FileNotFoundException)
+            {
+                fs?.Close();
+                MessageBox.Show("Не удалось найти файл с задачами");
+            }
+            catch (SerializationException)
             {
                 fs?.Close();
                 int i = 0;
@@ -69,8 +74,8 @@ namespace TaskBook.Data
                 return new ObservableCollection<Task>();
             }
 
-            fs.Close();
-            return loadData;
+            fs?.Close();
+            return loadData ?? new ObservableCollection<Task>();
         }
 
 
@@ -89,23 +94,26 @@ namespace TaskBook.Data
 
         public bool Save(ObservableCollection<Task> saveData)
         {
-
             var dirName = GetDirName();
             CreateDirIfNotExist(dirName);
+            FileStream fs = null;
             try
             {
                 string fileName = Path.Combine(dirName, "task.data");
-                var fs = File.Open(fileName, FileMode.Create, FileAccess.Write);
+                fs = File.Open(fileName, FileMode.Create, FileAccess.Write);
                 SaveFile(fs, saveData);
                 
             }
-            catch (Exception)
+            catch (IOException)
             {
-                // ignored
+                fs?.Close();
+            }
+            catch(SerializationException)
+            {
+                fs?.Close();
             }
 
             return true;
-
         }
 
         public static void SaveFile(FileStream fs, ObservableCollection<Task> saveData)

@@ -14,7 +14,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TaskBook</RootNamespace>
-    <AssemblyName>Слуга 1.7.2</AssemblyName>
+    <AssemblyName>Слуга 1.8.1</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -164,6 +164,9 @@
     <Compile Include="Data\TaskControl.cs" />
     <Compile Include="Data\TaskType.cs" />
     <Compile Include="Data\WeekNumbers.cs" />
+    <Compile Include="TestWindow.xaml.cs">
+      <DependentUpon>TestWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tools\Base64Converter.cs" />
     <Compile Include="Tools\CommonEventArgs.cs" />
     <Compile Include="Tools\StrikethroughConverter.cs" />
@@ -180,7 +183,6 @@
       <DependentUpon>RemindWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tools\SettingProvider.cs" />
-    <Compile Include="Tools\TaskLoger.cs" />
     <Compile Include="Tools\TemplateProvider.cs" />
     <Compile Include="UserControls\ColorSetting.xaml.cs">
       <DependentUpon>ColorSetting.xaml</DependentUpon>
@@ -289,6 +291,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <Page Include="TestWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\ColorSetting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

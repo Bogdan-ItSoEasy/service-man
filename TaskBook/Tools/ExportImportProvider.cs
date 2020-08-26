@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
 using TaskBook.Data;
@@ -34,14 +35,14 @@ namespace TaskBook.Tools
                 workbook.SaveAs(exportFileName);
                 appExcel.Workbooks.Close();
                 appExcel.Quit();
-                MessageBox.Show(@"Экспорт выполнен");
+                MessageBox.Show(Properties.Resources.ResourceManager.GetString("ExportDone", CultureInfo.CurrentCulture));
             }
             catch (Exception)
             {
                 MessageBox.Show(
                     $@"Не удалось экспортировать данные в файл {
                             exportFileName
-                        }. Возможно Microsoft Excel не установлен на данном компьютере или установлен некорректно. Воспользуйтель форматом .xml.");
+                        }. Возможно Microsoft Excel не установлен на данном компьютере или установлен некорректно. Воспользуйтесь форматом .xml.");
             }
         }
 
@@ -73,9 +74,13 @@ namespace TaskBook.Tools
                 var saveData = TaskControl.GetInstance().AllTasks;
                 var fs = File.Open(exportFileName, FileMode.Create, FileAccess.Write);
                 Serializer.SaveFile(fs, saveData);
-                MessageBox.Show(@"Экспорт выполнен");
+                MessageBox.Show(Properties.Resources.ResourceManager.GetString("ExportDone", CultureInfo.CurrentCulture));
             }
-            catch (Exception)
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show($@"Не удалось найти файл {exportFileName}.");
+            }
+            catch (SerializationException)
             {
                 MessageBox.Show($@"Не удалось экспортировать данные в файл {exportFileName}.");
             }
@@ -107,7 +112,7 @@ namespace TaskBook.Tools
                     }
                 appExcel.Workbooks.Close();
                 appExcel.Quit();
-                MessageBox.Show($@"Импорт успешно выполнен.");
+                MessageBox.Show(Properties.Resources.ResourceManager.GetString("ImportDone", CultureInfo.CurrentCulture));
                 
             }
             catch (Exception )
@@ -125,19 +130,29 @@ namespace TaskBook.Tools
                 Serializer.LoadXml(fs, out var loadTask);
 
                 var tc = TaskControl.GetInstance();
-                var importCount = 0;
                 foreach (var task in loadTask)
                 {
-                    if (task is CommonTask t && tc.IsNewCommonTask(t) && tc.AddTask(t))
-                        ++importCount;
+                    if (task is CommonTask t && tc.IsNewCommonTask(t))
+                    {
+                        tc.AddTask(t);
+                    }
 
-                    if (task is BirthTask b && tc.IsNewBirthTask(b) && tc.AddTask(b))
-                        ++importCount;
+                    if (task is BirthTask b && tc.IsNewBirthTask(b))
+                    {
+                        tc.AddTask(b);
+                    }
                 }
 
-                MessageBox.Show($@"Импорт успешно выполнен.");
+                MessageBox.Show(Properties.Resources.ResourceManager.GetString("ImportDone", CultureInfo.CurrentCulture));
             }
-            catch (Exception)
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show($@"Не удалось найти файл {fileName}.");
+
+                fs?.Close();
+                return;
+            }
+            catch (SerializationException)
             {
                 MessageBox.Show($@"Не удалось импортировать данные из файла {fileName}.");
                 
@@ -273,7 +288,7 @@ namespace TaskBook.Tools
                 dateTime = new DateTime(Int32.Parse(dateStr[2], new CultureInfo("ru-RU")), int.Parse(dateStr[1], new CultureInfo("ru-RU")), 
                     Int32.Parse(dateStr[0], new CultureInfo("ru-RU")));
             }
-            catch
+            catch(FormatException)
             {
                 return false;
             }
@@ -284,9 +299,9 @@ namespace TaskBook.Tools
                 var timeStr = sTime.Split(':');
 
                 taskTime = new DateTime(1, 1, 1, Int32.Parse(timeStr.Any() ? timeStr[0] : "9", new CultureInfo("ru-RU")),
-                    Int32.Parse((timeStr.Length > 1) ? timeStr[1] : "9", new CultureInfo("ru-RU")), 0);
+                        Int32.Parse(timeStr.Length > 1 ? timeStr[1] : "9", new CultureInfo("ru-RU")), 0); 
             }
-            catch
+            catch(FormatException)
             {
                 taskTime = new DateTime(1, 1, 1, 9, 0, 0, DateTimeKind.Local);
             }
