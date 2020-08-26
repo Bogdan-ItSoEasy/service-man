@@ -200,6 +200,8 @@ namespace TaskBook.Data
             }
         }
 
+        public string TaskRemindInfo => TaskInfo;
+
         private string _taskInfo;
         [DataMember]
         public DateTime TaskDate
@@ -439,7 +441,7 @@ namespace TaskBook.Data
 
         private bool RemindingWeekNumber(DateTime dateTime)
         {
-            var weekNumber = (int)Math.Pow(2, dateTime.Day / 7);
+            var weekNumber = (int)Math.Pow(2, (int)((dateTime.Day - 1) / 7));
 
             return RemindedWeekNumber == default || (weekNumber & (int) RemindedWeekNumber) == weekNumber;
         }
