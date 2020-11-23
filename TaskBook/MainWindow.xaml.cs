@@ -142,7 +142,7 @@ namespace TaskBook
         {
             if (sw == null)
             {
-                int height = 500;
+                int height = 550;
                 int width = 450;
                 sw = new DXWindow() { Content = new SettingView(), Title = "Настройки", Height = height, Width = width, ResizeMode = ResizeMode.NoResize };
                 SetResize(sw);

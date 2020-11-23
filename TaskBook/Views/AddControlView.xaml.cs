@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using TaskBook.Data;
+using TaskBook.Tools;
 using TaskBook.ViewModels;
 
 namespace TaskBook.Views
@@ -38,7 +39,8 @@ namespace TaskBook.Views
                                                 DataDate = DateTime.Today,
                                                 DataTime = new DateTime(1, 1, 1, DateTime.Now.Hour, DateTime.Now.Minute, 0),
                                                 Hour = DateTime.Now.Hour,
-                                                Min = DateTime.Now.Minute
+                                                Min = DateTime.Now.Minute,
+                                                Data = SettingProvider.GetSetting("add_date") == bool.TrueString ? $"\n(от {DateTime.Today:dd/MM/yyyy})" : "",
                                             }) { ButtonContent = buttonContent };
 
             var birthUc = new AddBirthCtrlView(task as BirthTask) { ButtonContent = buttonContent };

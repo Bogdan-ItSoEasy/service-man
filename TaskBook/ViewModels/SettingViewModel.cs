@@ -123,6 +123,13 @@ namespace TaskBook.ViewModels
         }
         private bool _isRepeat;
 
+        public bool IsShowDate
+        {
+            get => _isShowDate;
+            set => SetValue(ref _isShowDate, value);
+        }
+        private bool _isShowDate;
+
         public SettingViewModel()
         {
             TC = TaskControl.GetInstance();
@@ -144,6 +151,8 @@ namespace TaskBook.ViewModels
             IsAutoRun = appSettings["autorun"] == null || bool.FalseString != appSettings["autorun"];
             IsMinimize = bool.TrueString == appSettings["minimize"];
             IsRepeat = bool.TrueString == appSettings["repeat_task"];
+            IsShowDate = bool.TrueString == appSettings["add_date"];
+
 
             IsDirDefault = string.IsNullOrEmpty(SaveDirName);
             IsRingDefault = string.IsNullOrEmpty(RingFileName);
@@ -203,6 +212,8 @@ namespace TaskBook.ViewModels
             SettingProvider.SetSetting("minimize", _isMinimize.ToString(new CultureInfo("ru-Ru")));
 
             SettingProvider.SetAutoRun("autorun", _isAutoRun.ToString(new CultureInfo("ru-Ru")));
+
+            SettingProvider.SetAutoRun("add_date", _isShowDate.ToString(new CultureInfo("ru-Ru")));
 
             SettingProvider.UpdateAutorun();
         }

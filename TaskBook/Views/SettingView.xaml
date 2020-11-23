@@ -60,8 +60,11 @@
                        IsChecked="{Binding IsAutoRun}" Margin="10,10,0,0">Автозапуск</CheckBox>
             <CheckBox  
                        IsChecked="{Binding IsMinimize}" Margin="10,10,0,0">Запускать со свернутым окном</CheckBox>
-            <CheckBox  IsChecked="{Binding IsRepeat}" Margin="10,10,0,10">
+            <CheckBox  IsChecked="{Binding IsRepeat}" Margin="10,10,0,0">
                 <TextBlock TextWrapping="Wrap">Сразу переносить периодические задачи</TextBlock></CheckBox>
+            <CheckBox  IsChecked="{Binding IsShowDate}" Margin="10,10,0,10">
+                <TextBlock TextWrapping="Wrap">Добавлять дату при создании задачи</TextBlock>
+            </CheckBox>
         </StackPanel>
         
 

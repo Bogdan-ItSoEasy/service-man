@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/Res/ttt.txt
+/Res/ttt.resources
+/Res/ResGen.exe
